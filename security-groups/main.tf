@@ -149,8 +149,8 @@ resource "aws_security_group_rule" "internal_inst_sg_egress_self" {
 resource "aws_security_group_rule" "internal_inst_sg_egress_oracle" {
   security_group_id        = "${local.internal_inst_sg_id}"
   type                     = "egress"
-  from_port                = "5432"
-  to_port                  = "5432"
+  from_port                = "1521"
+  to_port                  = "1521"
   protocol                 = "tcp"
   source_security_group_id = "${local.db_sg_id}"
   description              = "${local.common_name}-rds-sg"
@@ -162,8 +162,8 @@ resource "aws_security_group_rule" "internal_inst_sg_egress_oracle" {
 resource "aws_security_group_rule" "rds_sg_egress_oracle" {
   security_group_id        = "${local.db_sg_id}"
   type                     = "ingress"
-  from_port                = "5432"
-  to_port                  = "5432"
+  from_port                = "1521"
+  to_port                  = "1521"
   protocol                 = "tcp"
   source_security_group_id = "${local.internal_inst_sg_id}"
   description              = "${local.common_name}-rds-sg"
