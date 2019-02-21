@@ -34,3 +34,7 @@ variable "route53_hosted_zone_id" {}
 variable "iaps_app_name" {}
 
 variable "cloudwatch_log_retention" {}
+
+variable "password_length" {
+  default = "18"
+}

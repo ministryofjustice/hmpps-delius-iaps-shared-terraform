@@ -64,7 +64,7 @@ data "template_file" "iam_policy_app_int" {
 
 module "create-iam-app-role-int" {
   source     = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//iam//role"
-  rolename   = "${local.common_name}-int-ec2"
+  rolename   = "${local.common_name}-sim-ec2"
   policyfile = "ec2_policy.json"
 }
 

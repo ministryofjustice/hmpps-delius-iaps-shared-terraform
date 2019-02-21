@@ -123,6 +123,7 @@ locals {
   remote_state_bucket_name     = "${var.remote_state_bucket_name}"
   s3_lb_policy_file            = "../policies/s3_alb_policy.json"
   environment                  = "${var.environment_type}"
+  admin_user                   = "${var.iaps_app_name}${var.environment_type}"
   tags                         = "${merge(data.terraform_remote_state.vpc.tags, map("sub-project", "${var.iaps_app_name}"))}"
   ssh_deployer_key             = "${data.terraform_remote_state.vpc.ssh_deployer_key}"
 
@@ -228,4 +229,44 @@ resource "aws_ssm_parameter" "param" {
   lifecycle {
     ignore_changes = ["value"]
   }
+}
+
+###############################################
+# IAPS admin account
+###############################################
+resource "random_string" "password" {
+  length  = 22
+  special = true
+}
+
+# Add to SSM
+resource "aws_ssm_parameter" "ssm_password" {
+  name        = "${local.common_name}-admin-password"
+  description = "${local.common_name}-admin-password"
+  type        = "SecureString"
+  value       = "${substr(sha256(bcrypt(random_string.password.result)),0,var.password_length)}${random_string.special.result}"
+
+  tags = "${merge(local.tags, map("Name", "${local.common_name}-admin-password"))}"
+
+  lifecycle {
+    ignore_changes = ["value"]
+  }
+}
+
+# Add to SSM
+resource "aws_ssm_parameter" "ssm_user" {
+  name        = "${local.common_name}-admin-user"
+  description = "${local.common_name}-admin-user"
+  type        = "String"
+  value       = "${local.admin_user}"
+  tags        = "${merge(local.tags, map("Name", "${local.common_name}-admin-user"))}"
+}
+
+# random strings for Password policy
+resource "random_string" "special" {
+  length           = 4
+  special          = true
+  min_upper        = 2
+  min_special      = 2
+  override_special = "!@$%&*()-_=+[]{}<>:?"
 }
