@@ -212,7 +212,7 @@ module "s3config_bucket" {
 # RDS DB PASSWORD
 ###############################################
 resource "random_string" "rds_password" {
-  length  = 20
+  length  = 18
   special = true
 }
 
@@ -221,7 +221,7 @@ resource "aws_ssm_parameter" "param" {
   name        = "${local.common_name}-rds-db-password"
   description = "${local.common_name}-rds-db-password"
   type        = "SecureString"
-  value       = "${sha256(bcrypt(random_string.rds_password.result))}"
+  value       = "${random_string.rds_password.result}"
 
   tags = "${merge(local.tags, map("Name", "${local.common_name}-rds-db-password"))}"
 
