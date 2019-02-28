@@ -174,6 +174,12 @@ locals {
     "${data.terraform_remote_state.nat.natgateway_common-nat-public-ip-az2}/32",
     "${data.terraform_remote_state.nat.natgateway_common-nat-public-ip-az3}/32",
   ]
+
+  bastion_cidrs = [
+    "${data.terraform_remote_state.vpc.bastion_vpc_public_cidr["az1"]}",
+    "${data.terraform_remote_state.vpc.bastion_vpc_public_cidr["az2"]}",
+    "${data.terraform_remote_state.vpc.bastion_vpc_public_cidr["az3"]}",
+  ]
 }
 
 #######################################

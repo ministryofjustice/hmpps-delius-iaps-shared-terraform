@@ -160,3 +160,8 @@ output "app_hostnames" {
 output "nat_gateway_ips" {
   value = "${local.nat_gateways_ips}"
 }
+
+# bastion cidr
+output "bastion_vpc_public_cidr" {
+  value = ["${local.bastion_cidrs}"]
+}
