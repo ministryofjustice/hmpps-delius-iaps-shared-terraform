@@ -62,7 +62,7 @@ locals {
   region                 = "${var.region}"
   iaps_app_name          = "${data.terraform_remote_state.common.iaps_app_name}"
   dns_name               = "${data.terraform_remote_state.common.iaps_app_name}-db"
-  db_identity            = "${data.terraform_remote_state.common.iaps_app_name}${data.terraform_remote_state.common.environment}"
+  db_identity            = "${data.terraform_remote_state.common.iaps_app_name}"
   environment            = "${data.terraform_remote_state.common.environment}"
   tags                   = "${data.terraform_remote_state.common.common_tags}"
   public_cidr_block      = ["${data.terraform_remote_state.common.db_cidr_block}"]
