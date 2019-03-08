@@ -184,3 +184,11 @@ resource "aws_route53_record" "instance" {
   ttl     = "300"
   records = ["${module.create-ec2-instance.private_ip}"]
 }
+
+resource "aws_route53_record" "ext_instance" {
+  zone_id = "${local.public_zone_id}"
+  name    = "${local.app_hostnames["external"]}.${local.external_domain}"
+  type    = "A"
+  ttl     = "300"
+  records = ["${module.create-ec2-instance.private_ip}"]
+}

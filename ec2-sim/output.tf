@@ -11,3 +11,7 @@ output "primary_private_ip" {
 output "primary_dns" {
   value = "${aws_route53_record.instance.fqdn}"
 }
+
+output "ext_primary_dns" {
+  value = "${aws_route53_record.ext_instance.fqdn}"
+}
