@@ -230,7 +230,7 @@ module "s3config_bucket" {
 ###############################################
 resource "random_string" "rds_password" {
   length  = 18
-  special = true
+  special = false
 }
 
 # Add to SSM
