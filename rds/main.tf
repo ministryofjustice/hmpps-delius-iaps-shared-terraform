@@ -70,14 +70,19 @@ locals {
   db_cidr_block          = ["${data.terraform_remote_state.common.db_cidr_block}"]
   private_subnet_map     = "${data.terraform_remote_state.common.private_subnet_map}"
   db_subnet_ids          = ["${data.terraform_remote_state.common.db_subnet_ids}"]
-  security_group_ids     = ["${data.terraform_remote_state.security-groups.security_groups_sg_rds_id}"]
-  db_password            = "${data.aws_ssm_parameter.db_password.value}"
-  family                 = "${var.rds_family}"
-  major_engine_version   = "${var.rds_major_engine_version}"
-  engine                 = "${var.rds_engine}"
-  engine_version         = "${var.rds_engine_version}"
-  instance_class         = "${var.rds_instance_class}"
-  allocated_storage      = "${var.rds_allocated_storage}"
+
+  security_group_ids = [
+    "${data.terraform_remote_state.security-groups.security_groups_sg_rds_id}",
+    "${data.terraform_remote_state.security-groups.security_groups_sg_delius_db}",
+  ]
+
+  db_password          = "${data.aws_ssm_parameter.db_password.value}"
+  family               = "${var.rds_family}"
+  major_engine_version = "${var.rds_major_engine_version}"
+  engine               = "${var.rds_engine}"
+  engine_version       = "${var.rds_engine_version}"
+  instance_class       = "${var.rds_instance_class}"
+  allocated_storage    = "${var.rds_allocated_storage}"
 }
 
 ############################################

@@ -11,6 +11,10 @@ output "security_groups_sg_external_lb_id" {
   value = "${local.external_lb_sg_id}"
 }
 
+output "security_groups_sg_delius_db" {
+  value = "${local.sg_delius_db}"
+}
+
 output "security_groups_map" {
   value = "${local.sg_map_ids}"
 }
