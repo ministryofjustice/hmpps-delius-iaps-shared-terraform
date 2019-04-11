@@ -23,5 +23,5 @@ Master Password: [tf-eu-west-2-hmpps-delius-mis-test-iaps-rds-db-password](https
 
 ```
   
-iaps.dev.delius-core.probation.hmpps.dsd.io
+iaps.mis-test.delius.probation.hmpps.dsd.io
 ```
