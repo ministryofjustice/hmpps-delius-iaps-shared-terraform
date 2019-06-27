@@ -18,5 +18,11 @@ Set-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
 Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -name "AltDefaultDomainName" -value $ComputerName
 Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -name "DefaultDomainName" -value $ComputerName
 
+# Run all scripts that apply runtime config
+$runtimeconfig = 'C:\Setup\RunTimeConfig'
+Get-ChildItem $runtimeconfig -Filter *.ps1 | 
+    Foreach-Object {
+        & $runtimeconfig\$_
+    }
 </powershell>
 <persist>true</persist>

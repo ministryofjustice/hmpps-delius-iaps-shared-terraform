@@ -62,7 +62,17 @@
             "Effect": "Allow",
             "Sid": "EC2Perms",
             "Action": [
-                "ec2:DescribeInstances"
+                "ec2:DescribeInstances",
+                "ec2.DescribeTags"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Sid": "ACMPerms",
+            "Action": [
+                "acm:GetCertificate",
+                "acm:ListCertificates"
             ],
             "Resource": "*"
         }
