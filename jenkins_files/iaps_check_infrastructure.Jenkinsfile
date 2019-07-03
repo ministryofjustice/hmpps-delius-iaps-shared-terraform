@@ -63,20 +63,16 @@ pipeline {
             }
         }
 
-        stage('Plan IAPS Common')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'common')}}}
+        stage('Check IAPS Common') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'common')}}}
         
-        stage('Plan IAPS IAM & Security Groups') {
-          parallel {
-            stage('Plan IAPS IAM')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'iam')}}}
-            stage('Plan IAPS Security Groups')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'security-groups')}}}
-            }
+        parallel {
+        stage('Check IAPS IAM') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'iam')}}}
+        stage('Check IAPS Security Groups') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'security-groups')}}}
         }
-
-        stage('Plan IAPS EC2 & RDS') {
-          parallel {
-            stage('Plan IAPS EC2')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'ec2')}}}
-            stage('Plan IAPS RDS')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'rds')}}}
-            }
+        
+        parallel {
+        stage('Check IAPS EC2') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'ec2')}}}
+        stage('Check IAPS RDS') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'rds')}}}
         }
     }
 
