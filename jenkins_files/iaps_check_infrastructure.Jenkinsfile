@@ -54,7 +54,7 @@ pipeline {
         stage('setup') {
             steps {
                 dir( project.config ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: env.GIT_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
                 dir( project.iaps ) {
                   checkout scm
@@ -63,19 +63,19 @@ pipeline {
             }
         }
 
-        stage('Plan IAPS Common')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'common')}}}
+        stage('Plan IAPS Common')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'common')}}}
         
         stage('Plan IAPS IAM & Security Groups') {
           parallel {
-            stage('Plan IAPS IAM')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'iam')}}}
-            stage('Plan IAPS Security Groups')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'security-groups')}}}
+            stage('Plan IAPS IAM')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'iam')}}}
+            stage('Plan IAPS Security Groups')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'security-groups')}}}
             }
         }
 
         stage('Plan IAPS EC2 & RDS') {
           parallel {
-            stage('Plan IAPS EC2')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'ec2')}}}
-            stage('Plan IAPS RDS')        { steps { script {plan_submodule(project.config, environment_name, project.dcore, 'rds')}}}
+            stage('Plan IAPS EC2')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'ec2')}}}
+            stage('Plan IAPS RDS')        { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'rds')}}}
             }
         }
     }
