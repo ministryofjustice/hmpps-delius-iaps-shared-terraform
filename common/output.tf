@@ -70,8 +70,16 @@ output "role_arn" {
   value = "${var.role_arn}"
 }
 
+output "application" {
+  value = "${local.application}"
+}
+
 output "iaps_app_name" {
   value = "${var.iaps_app_name}"
+}
+
+output "environment_name" {
+  value = "${var.environment_name}"
 }
 
 output "environment_identifier" {
@@ -95,6 +103,14 @@ output "private_subnet_map" {
     az1 = "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}"
     az2 = "${data.terraform_remote_state.vpc.vpc_private-subnet-az2}"
     az3 = "${data.terraform_remote_state.vpc.vpc_private-subnet-az3}"
+  }
+}
+
+output "public_subnet_map" {
+  value = {
+    az1 = "${data.terraform_remote_state.vpc.vpc_public-subnet-az1}"
+    az2 = "${data.terraform_remote_state.vpc.vpc_public-subnet-az2}"
+    az3 = "${data.terraform_remote_state.vpc.vpc_public-subnet-az3}"
   }
 }
 

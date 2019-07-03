@@ -117,6 +117,7 @@ locals {
   lb_account_id                = "${var.lb_account_id}"
   region                       = "${var.region}"
   role_arn                     = "${var.role_arn}"
+  application                  = "${var.project_name}"
   iaps_app_name                = "${var.iaps_app_name}"
   environment_identifier       = "${var.environment_identifier}"
   short_environment_identifier = "${var.short_environment_identifier}"
@@ -143,6 +144,12 @@ locals {
     az1 = "${data.terraform_remote_state.vpc.vpc_private-subnet-az1}"
     az2 = "${data.terraform_remote_state.vpc.vpc_private-subnet-az2}"
     az3 = "${data.terraform_remote_state.vpc.vpc_private-subnet-az3}"
+  }
+
+  public_subnet_map = {
+    az1 = "${data.terraform_remote_state.vpc.vpc_public-subnet-az1}"
+    az2 = "${data.terraform_remote_state.vpc.vpc_public-subnet-az2}"
+    az3 = "${data.terraform_remote_state.vpc.vpc_public-subnet-az3}"
   }
 
   public_cidr_block = [
@@ -223,66 +230,4 @@ module "s3config_bucket" {
   source         = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//s3bucket//s3bucket_without_policy"
   s3_bucket_name = "${local.common_name}"
   tags           = "${local.tags}"
-}
-
-###############################################
-# RDS DB PASSWORD
-###############################################
-resource "random_string" "rds_password" {
-  length  = 18
-  special = false
-}
-
-# Add to SSM
-resource "aws_ssm_parameter" "param" {
-  name        = "${local.common_name}-rds-db-password"
-  description = "${local.common_name}-rds-db-password"
-  type        = "SecureString"
-  value       = "${random_string.rds_password.result}"
-
-  tags = "${merge(local.tags, map("Name", "${local.common_name}-rds-db-password"))}"
-
-  lifecycle {
-    ignore_changes = ["value"]
-  }
-}
-
-###############################################
-# IAPS admin account
-###############################################
-resource "random_string" "password" {
-  length  = 22
-  special = true
-}
-
-# Add to SSM
-resource "aws_ssm_parameter" "ssm_password" {
-  name        = "${local.common_name}-admin-password"
-  description = "${local.common_name}-admin-password"
-  type        = "SecureString"
-  value       = "${substr(sha256(bcrypt(random_string.password.result)),0,var.password_length)}${random_string.special.result}"
-
-  tags = "${merge(local.tags, map("Name", "${local.common_name}-admin-password"))}"
-
-  lifecycle {
-    ignore_changes = ["value"]
-  }
-}
-
-# Add to SSM
-resource "aws_ssm_parameter" "ssm_user" {
-  name        = "${local.common_name}-admin-user"
-  description = "${local.common_name}-admin-user"
-  type        = "String"
-  value       = "${local.admin_user}"
-  tags        = "${merge(local.tags, map("Name", "${local.common_name}-admin-user"))}"
-}
-
-# random strings for Password policy
-resource "random_string" "special" {
-  length           = 4
-  special          = true
-  min_upper        = 2
-  min_special      = 2
-  override_special = "!@$%&*()-_=+[]{}<>:?"
 }

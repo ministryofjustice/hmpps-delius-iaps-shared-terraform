@@ -63,7 +63,7 @@
             "Sid": "EC2Perms",
             "Action": [
                 "ec2:DescribeInstances",
-                "ec2.DescribeTags"
+                "ec2:DescribeTags"
             ],
             "Resource": "*"
         },

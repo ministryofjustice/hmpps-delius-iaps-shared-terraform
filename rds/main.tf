@@ -42,7 +42,7 @@ data "terraform_remote_state" "security-groups" {
 ## Getting the rds db password
 #-------------------------------------------------------------
 data "aws_ssm_parameter" "db_password" {
-  name = "${data.terraform_remote_state.common.common_name}-rds-db-password"
+  name = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_rds_admin_password"
 }
 
 ####################################################
@@ -60,10 +60,12 @@ locals {
   common_name            = "${data.terraform_remote_state.common.common_name}"
   environment_identifier = "${data.terraform_remote_state.common.environment_identifier}"
   region                 = "${var.region}"
+  application            = "${data.terraform_remote_state.common.application}"
   iaps_app_name          = "${data.terraform_remote_state.common.iaps_app_name}"
   dns_name               = "${data.terraform_remote_state.common.iaps_app_name}-db"
   db_identity            = "${data.terraform_remote_state.common.iaps_app_name}"
   environment            = "${data.terraform_remote_state.common.environment}"
+  environment-name       = "${data.terraform_remote_state.common.environment_name}"
   tags                   = "${data.terraform_remote_state.common.common_tags}"
   public_cidr_block      = ["${data.terraform_remote_state.common.db_cidr_block}"]
   private_cidr_block     = ["${data.terraform_remote_state.common.private_cidr_block}"]
