@@ -57,7 +57,7 @@ pipeline {
                   git url: 'git@github.com:ministryofjustice/' + project.config, branch: env.GIT_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
                 dir( project.iaps ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.iaps, branch: env.GIT_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  checkout scm
                 }
                 prepare_env()
             }
