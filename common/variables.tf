@@ -40,3 +40,6 @@ variable "cloudwatch_log_retention" {
 variable "password_length" {
   default = "18"
 }
+
+variable "environment_name" {}
+variable "project_name" {}

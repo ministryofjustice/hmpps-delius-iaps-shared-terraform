@@ -8,8 +8,14 @@ variable "environment_type" {
   description = "environment"
 }
 
-variable "cloudwatch_log_retention" {}
-
 variable "instance_type" {
-  default = "t2.xlarge"
+  default = "t3.medium"
+}
+
+variable "environment_name" {
+  type = "string"
+}
+
+variable "project_name" {
+  description = "The project name - delius-core"
 }

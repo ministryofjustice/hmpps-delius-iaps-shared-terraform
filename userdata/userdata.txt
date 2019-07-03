@@ -1,8 +1,12 @@
 <powershell>
-$adminCreds = New-Credential -UserName "${user}" -Password "${password}"
+
+$adminUser = Get-SSMParametersByPath -Path ${user_ssm_path}
+$adminPassword = Get-SSMParametersByPath -Path ${password_ssm_path} -WithDecryption
+
+$adminCreds = New-Credential -UserName "$adminUser" -Password "$adminPassword"
 Install-User -Credential $adminCreds
 
-Add-GroupMember -Name Administrators -Member ${user}
+Add-GroupMember -Name Administrators -Member $adminUser
 
 $ComputerName = "${host_name}"
    

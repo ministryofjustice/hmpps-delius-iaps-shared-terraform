@@ -1,17 +1,16 @@
 # primary ec2
-output "primary_instance_id" {
-  value = "${module.create-ec2-instance.instance_id}"
+output "iaps_asg_arn" {
+  value = "${aws_autoscaling_group.iaps.arn}"
 }
 
-output "primary_private_ip" {
-  value = "${module.create-ec2-instance.private_ip}"
+output "iaps_launchconfig_id" {
+  value = "${aws_launch_configuration.iaps.id}"
 }
 
-# dns
-output "primary_dns" {
-  value = "${aws_route53_record.instance.fqdn}"
+output "iaps_alb_arn" {
+  value = "${aws_lb.iaps.arn}"
 }
 
-output "ext_primary_dns" {
-  value = "${aws_route53_record.ext_instance.fqdn}"
+output "iaps_alb_fqdn" {
+  value = "${aws_lb.iaps.dns_name}"
 }
