@@ -14,7 +14,7 @@ resource "aws_launch_configuration" "iaps" {
   iam_instance_profile        = "${local.instance_profile}"
   image_id                    = "${local.ami_id}"
   instance_type               = "${var.instance_type}"
-  name                        = "${local.environment-name}-${local.application}-iaps-lc"
+  name_prefix                 = "${local.environment-name}-${local.application}-iaps-launch-cfg-"
 
   security_groups = [
     "${local.sg_map_ids["sg_iaps_api_in"]}",
