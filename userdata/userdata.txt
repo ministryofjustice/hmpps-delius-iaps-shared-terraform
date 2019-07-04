@@ -1,7 +1,7 @@
 <powershell>
 
-$adminUser = Get-SSMParametersByPath -Path ${user_ssm_path}
-$adminPassword = Get-SSMParametersByPath -Path ${password_ssm_path} -WithDecryption
+$adminUser = (Get-SSMParameterValue -Name ${user_ssm_path}).Parameters.Value
+$adminPassword = (Get-SSMParameterValue -Name ${password_ssm_path} -WithDecryption $true).Parameters.Value
 
 $adminCreds = New-Credential -UserName "$adminUser" -Password "$adminPassword"
 Install-User -Credential $adminCreds
