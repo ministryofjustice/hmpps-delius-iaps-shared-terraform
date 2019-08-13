@@ -85,6 +85,7 @@ locals {
   engine_version       = "${var.rds_engine_version}"
   instance_class       = "${var.rds_instance_class}"
   allocated_storage    = "${var.rds_allocated_storage}"
+  character_set_name   = "${var.rds_character_set_name}"
 }
 
 ############################################
@@ -207,7 +208,7 @@ module "db_instance" {
   monitoring_role_name = "${module.rds_monitoring_role.iamrole_name}"
 
   timezone           = "${var.timezone}"
-  character_set_name = "${var.character_set_name}"
+  character_set_name = "${local.character_set_name}"
 
   tags = "${local.tags}"
 }
