@@ -72,17 +72,25 @@ pipeline {
             }
         }
 
-        stage('Check IAPS Common') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'common')}}}
+        stage('Check IAPS Common') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            script {plan_submodule(project.config, environment_name, project.iaps, 'common')}}}
+        }
         stage('IAM & Security Groups') {
             parallel {
-            stage('Check IAPS IAM') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'iam')}}}
-            stage('Check IAPS Security Groups') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'security-groups')}}}
+            stage('Check IAPS IAM') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                script {plan_submodule(project.config, environment_name, project.iaps, 'iam')}}}
+            }
+            stage('Check IAPS Security Groups') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                script {plan_submodule(project.config, environment_name, project.iaps, 'security-groups')}}}
             }
         }
         stage('EC2 & RDS') {
             parallel {
-            stage('Check IAPS EC2') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'ec2')}}}
-            stage('Check IAPS RDS') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'rds')}}}
+            stage('Check IAPS EC2') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                script {plan_submodule(project.config, environment_name, project.iaps, 'ec2')}}}
+            }
+            stage('Check IAPS RDS') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                script {plan_submodule(project.config, environment_name, project.iaps, 'rds')}}}
             }
         }
     }
