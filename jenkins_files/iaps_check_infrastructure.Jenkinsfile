@@ -7,6 +7,9 @@ project.iaps     = 'hmpps-delius-iaps-shared-terraform'
 //     choice:
 //       name: 'environment_name'
 //       description: 'Environment name.'
+//     string:
+//       name: 'CONFIG_BRANCH'
+//       description: 'Target Branch for hmpps-env-configs'
 
 def prepare_env() {
     sh '''
@@ -49,6 +52,10 @@ pipeline {
 
     agent { label "jenkins_slave" }
 
+    parameters {
+        string(name: 'CONFIG_BRANCH', description: 'Target Branch for hmpps-env-configs', defaultValue: 'master')
+    }
+
     stages {
 
         stage('setup') {
@@ -56,7 +63,7 @@ pipeline {
                 slackSend(message: "Build started on \"${environment_name}\" - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL.replace(':8080','')}|Open>)")
 
                 dir( project.config ) {
-                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: 'master', credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
+                  git url: 'git@github.com:ministryofjustice/' + project.config, branch: env.CONFIG_BRANCH, credentialsId: 'f44bc5f1-30bd-4ab9-ad61-cc32caf1562a'
                 }
                 dir( project.iaps ) {
                   checkout scm
@@ -65,17 +72,27 @@ pipeline {
             }
         }
 
-        stage('Check IAPS Common') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'common')}}}
+        stage('Check IAPS Common') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            script {plan_submodule(project.config, environment_name, project.iaps, 'common')}}}
+        }
         stage('IAM & Security Groups') {
             parallel {
-            stage('Check IAPS IAM') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'iam')}}}
-            stage('Check IAPS Security Groups') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'security-groups')}}}
+                stage('Check IAPS IAM') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    script {plan_submodule(project.config, environment_name, project.iaps, 'iam')}}}
+                }
+                stage('Check IAPS Security Groups') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    script {plan_submodule(project.config, environment_name, project.iaps, 'security-groups')}}}
+                }
             }
         }
         stage('EC2 & RDS') {
             parallel {
-            stage('Check IAPS EC2') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'ec2')}}}
-            stage('Check IAPS RDS') { steps { script {plan_submodule(project.config, environment_name, project.iaps, 'rds')}}}
+                stage('Check IAPS EC2') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    script {plan_submodule(project.config, environment_name, project.iaps, 'ec2')}}}
+                }
+                stage('Check IAPS RDS') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    script {plan_submodule(project.config, environment_name, project.iaps, 'rds')}}}
+                }
             }
         }
     }
