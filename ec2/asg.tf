@@ -49,7 +49,7 @@ resource "aws_autoscaling_group" "iaps" {
   max_size                  = 1
   min_size                  = 1
   health_check_grace_period = 300
-  health_check_type         = "ELB"
+  health_check_type         = "EC2"
   launch_configuration      = "${aws_launch_configuration.iaps.name}"
 
   target_group_arns = [
