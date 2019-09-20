@@ -3,8 +3,8 @@ output "iaps_asg_arn" {
   value = "${aws_autoscaling_group.iaps.arn}"
 }
 
-output "iaps_launchconfig_id" {
-  value = "${aws_launch_configuration.iaps.id}"
+output "iaps_launchtemplate_id" {
+  value = "${aws_launch_template.iaps.id}"
 }
 
 output "iaps_alb_arn" {

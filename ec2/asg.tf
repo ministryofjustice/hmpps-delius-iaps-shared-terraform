@@ -10,26 +10,6 @@ data "template_file" "instance_userdata" {
   }
 }
 
-resource "aws_launch_configuration" "iaps" {
-  associate_public_ip_address = false
-  iam_instance_profile        = "${local.instance_profile}"
-  image_id                    = "${local.ami_id}"
-  instance_type               = "${var.instance_type}"
-  name_prefix                 = "${local.environment-name}-${local.application}-iaps-launch-cfg-"
-
-  security_groups = [
-    "${local.sg_map_ids["sg_iaps_api_in"]}",
-    "${local.sg_outbound_id}",
-  ]
-
-  user_data_base64 = "${base64encode(data.template_file.instance_userdata.rendered)}"
-  key_name         = "${local.ssh_deployer_key}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_launch_template" "iaps" {
   name_prefix = "${local.environment-name}-${local.application}-iaps-pri-tpl-"
   description = "Windows IAPS Server Launch Template"
