@@ -78,3 +78,18 @@ module "create-iam-app-policy-int" {
   policyfile = "${data.template_file.iam_policy_app_int.rendered}"
   rolename   = "${module.create-iam-app-role-int.iamrole_name}"
 }
+
+# AWS Backups IAM role for EFS Data Volume
+data "template_file" "backup_assume_role_template" {
+  template = "${file("../policies/backup_assume_role.tpl")}"
+  vars     = {}
+}
+resource "aws_iam_role" "iaps_ebs_backup_role" {
+  name               = "${local.common_name}-iapsbkup-pri-iam"
+  assume_role_policy = "${data.template_file.backup_assume_role_template.rendered}"
+}
+
+resource "aws_iam_role_policy_attachment" "iaps_ebs_backup_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
+  role       = "${aws_iam_role.iaps_ebs_backup_role.name}"
+}
