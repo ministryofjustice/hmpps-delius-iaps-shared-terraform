@@ -5,7 +5,7 @@ terraform {
 
 provider "aws" {
   region  = "${var.region}"
-  version = "~> 1.16"
+  version = "~> 2.17"
 }
 
 ####################################################
@@ -68,25 +68,28 @@ data "terraform_remote_state" "security-groups" {
 #-------------------------------------------------------------
 data "aws_ami" "amazon_ami" {
   most_recent = true
+  owners      = ["895523100917"]
 
   filter {
     name   = "name"
     values = ["HMPPS IAPS Windows Server master*"]
   }
 
+  # correct arch
   filter {
     name   = "architecture"
     values = ["x86_64"]
   }
 
+  # Owned by Amazon
   filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
+    name   = "owner-id"
+    values = ["895523100917"]
   }
 
   filter {
-    name   = "root-device-type"
-    values = ["ebs"]
+    name   = "virtualization-type"
+    values = ["hvm"]
   }
 }
 
@@ -113,4 +116,5 @@ locals {
   sg_lb_external_id            = "${data.terraform_remote_state.security-groups.security_groups_sg_external_lb_id}"
   private_subnet_ids           = ["${data.terraform_remote_state.common.private_subnet_ids}"]
   public_subnet_ids            = ["${data.terraform_remote_state.common.public_subnet_ids}"]
+  backup_ebs_role_arn          = "${data.terraform_remote_state.iam.backup_ebs_role_arn}"
 }
