@@ -9,6 +9,9 @@ Install-User -Credential $adminCreds
 Add-GroupMember -Name Administrators -Member $adminUser
 
 $ComputerName = "${host_name}"
+[System.Environment]::SetEnvironmentVariable("ExternalDomain", "${external_domain}",[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable("ExternalDomain", "${external_domain}", [System.EnvironmentVariableTarget]::Process)
+[System.Environment]::SetEnvironmentVariable("ExternalDomain", "${external_domain}", [System.EnvironmentVariableTarget]::User)
    
 Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "Hostname" 
 Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "NV Hostname" 

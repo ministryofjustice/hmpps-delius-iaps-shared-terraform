@@ -4,6 +4,7 @@ data "template_file" "instance_userdata" {
   vars {
     host_name         = "${local.iaps_role}-001"
     internal_domain   = "${local.internal_domain}"
+    external_domain     = "${local.external_domain}"
     user_ssm_path     = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_user"
     password_ssm_path = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_password"
   }
