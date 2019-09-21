@@ -33,3 +33,8 @@ variable "environment_name" {
 variable "project_name" {
   description = "The project name - delius-core"
 }
+
+variable "psn_proxy_endpoint" {
+  description = "PSN Proxies for connecting to IM"
+  default = "im-proxy.psn.probation.service.justice.gov.uk"
+}

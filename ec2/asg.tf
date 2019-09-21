@@ -7,6 +7,7 @@ data "template_file" "instance_userdata" {
     external_domain   = "${local.external_domain}"
     user_ssm_path     = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_user"
     password_ssm_path = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_password"
+    psn_proxy_endpoint = "${var.psn_proxy_endpoint}"
   }
 }
 
