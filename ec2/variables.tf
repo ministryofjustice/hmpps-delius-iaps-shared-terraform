@@ -13,7 +13,7 @@ variable "instance_type" {
 }
 
 variable "ebs_volume_size" {
-  default = 30
+  default = 50
 }
 
 variable "ebs_backup" {

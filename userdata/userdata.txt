@@ -25,6 +25,10 @@ Set-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
 Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -name "AltDefaultDomainName" -value $ComputerName
 Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -name "DefaultDomainName" -value $ComputerName
 
+# Resize system drive if overridden from ami value
+$MaxSize = (Get-PartitionSupportedSize -DriveLetter C).sizeMax
+Resize-Partition -DriveLetter C -Size $MaxSize
+
 # Run all scripts that apply runtime config
 $runtimeconfig = 'C:\Setup\RunTimeConfig'
 Get-ChildItem $runtimeconfig -Filter *.ps1 | 
