@@ -58,6 +58,7 @@ locals {
   allowed_cidr_block = [
     "${var.user_access_cidr_blocks}",
     "${data.terraform_remote_state.common.nat_gateway_ips}",
+    "${var.psn_proxy_cidrs}",
   ]
 
   bastion_cidr_block  = ["${data.terraform_remote_state.common.bastion_vpc_public_cidr}"]
