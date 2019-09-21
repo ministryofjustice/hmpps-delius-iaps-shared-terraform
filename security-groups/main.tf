@@ -170,6 +170,16 @@ resource "aws_security_group_rule" "internal_inst_sg_egress_oracle" {
   description              = "${local.common_name}-rds-sg"
 }
 
+resource "aws_security_group_rule" "internal_inst_sg_egress_smtp" {
+  security_group_id        = "${local.internal_inst_sg_id}"
+  type                     = "egress"
+  from_port                = "25"
+  to_port                  = "25"
+  protocol                 = "tcp"
+  cidr_blocks              = [ "0.0.0.0/0" ]
+  description              = "${local.common_name}-smtp-sg"
+}
+
 #-------------------------------------------------------------
 ### rds sg
 #-------------------------------------------------------------
