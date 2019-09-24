@@ -35,6 +35,9 @@ Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlo
 $MaxSize = (Get-PartitionSupportedSize -DriveLetter C).sizeMax
 Resize-Partition -DriveLetter C -Size $MaxSize
 
+# Set timezone
+tzutil /s 'GMT Standard Time' 
+
 # Run all scripts that apply runtime config
 $runtimeconfig = 'C:\Setup\RunTimeConfig'
 Get-ChildItem $runtimeconfig -Filter *.ps1 | 
