@@ -72,55 +72,8 @@ locals {
 # SECURITY GROUPS
 #######################################
 #-------------------------------------------------------------
-### external lb sg
-#-------------------------------------------------------------
-
-resource "aws_security_group_rule" "external_lb_ingress_https" {
-  security_group_id = "${local.external_lb_sg_id}"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  type              = "ingress"
-  description       = "${local.common_name}-lb-external-sg-https"
-
-  cidr_blocks = [
-    "${local.allowed_cidr_block}",
-  ]
-}
-
-resource "aws_security_group_rule" "external_lb_egress_https" {
-  security_group_id        = "${local.external_lb_sg_id}"
-  type                     = "egress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  source_security_group_id = "${local.internal_inst_sg_id}"
-  description              = "${local.common_name}-instance-internal-https"
-}
-
-resource "aws_security_group_rule" "external_lb_egress_http_iaps" {
-  security_group_id        = "${local.external_lb_sg_id}"
-  type                     = "egress"
-  from_port                = 8080
-  to_port                  = 8080
-  protocol                 = "tcp"
-  source_security_group_id = "${local.internal_inst_sg_id}"
-  description              = "${local.common_name}-instance-internal-http-iaps"
-}
-
-#-------------------------------------------------------------
 ### internal instance sg
 #-------------------------------------------------------------
-resource "aws_security_group_rule" "internal_inst_sg_ingress_http" {
-  security_group_id        = "${local.internal_inst_sg_id}"
-  type                     = "ingress"
-  from_port                = 8080
-  to_port                  = 8080
-  protocol                 = "tcp"
-  source_security_group_id = "${local.external_lb_sg_id}"
-  description              = "${local.common_name}-lb-ingress-http"
-}
-
 # rdp
 resource "aws_security_group_rule" "internal_inst_sg_rdp" {
   security_group_id = "${local.internal_inst_sg_id}"

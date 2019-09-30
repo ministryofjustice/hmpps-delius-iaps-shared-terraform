@@ -113,7 +113,6 @@ locals {
   ssh_deployer_key             = "${data.terraform_remote_state.common.common_ssh_deployer_key}"
   iaps_role                    = "sim-win"
   sg_outbound_id               = "${data.terraform_remote_state.common.common_sg_outbound_id}"
-  sg_lb_external_id            = "${data.terraform_remote_state.security-groups.security_groups_sg_external_lb_id}"
   private_subnet_ids           = ["${data.terraform_remote_state.common.private_subnet_ids}"]
   public_subnet_ids            = ["${data.terraform_remote_state.common.public_subnet_ids}"]
   backup_ebs_role_arn          = "${data.terraform_remote_state.iam.backup_ebs_role_arn}"

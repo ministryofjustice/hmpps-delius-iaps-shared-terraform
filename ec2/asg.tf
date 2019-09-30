@@ -86,10 +86,6 @@ resource "aws_autoscaling_group" "iaps" {
     version = "$Latest"
   }
 
-  target_group_arns = [
-    "${aws_lb_target_group.iaps_http.arn}",
-  ]
-
   enabled_metrics = [
     "GroupMinSize",
     "GroupMaxSize",
