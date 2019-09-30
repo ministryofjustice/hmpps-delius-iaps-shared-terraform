@@ -79,6 +79,16 @@ module "create-iam-app-policy-int" {
   rolename   = "${module.create-iam-app-role-int.iamrole_name}"
 }
 
+resource "aws_iam_role_policy_attachment" "iaps_instance_cloudwatch_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = "${module.create-iam-app-role-int.iamrole_name}"
+}
+
+resource "aws_iam_role_policy_attachment" "iaps_instance_ssmmgmt_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  role       = "${module.create-iam-app-role-int.iamrole_name}"
+}
+
 # AWS Backups IAM role for EFS Data Volume
 data "template_file" "backup_assume_role_template" {
   template = "${file("../policies/backup_assume_role.tpl")}"

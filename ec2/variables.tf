@@ -35,6 +35,11 @@ variable "project_name" {
 }
 
 variable "psn_proxy_endpoint" {
-  description = "PSN Proxies for connecting to IM"
-  default = "im-proxy.psn.probation.service.justice.gov.uk"
+  description = "PSN Proxies for connecting to IM - Note that there is only 1 PSN proxy and that targets the prod env"
+  default = "localhost"
+}
+
+variable "log_retention" {
+  description = "Days to keep cloudwatch logs"
+  default = 14
 }

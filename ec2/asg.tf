@@ -81,14 +81,13 @@ resource "aws_autoscaling_group" "iaps" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
 
-  #launch_configuration      = "${aws_launch_configuration.iaps.name}"
   launch_template = {
     id      = "${aws_launch_template.iaps.id}"
     version = "$Latest"
   }
 
   target_group_arns = [
-    "${aws_lb_target_group.iaps_https.arn}",
+    "${aws_lb_target_group.iaps_http.arn}",
   ]
 
   enabled_metrics = [
