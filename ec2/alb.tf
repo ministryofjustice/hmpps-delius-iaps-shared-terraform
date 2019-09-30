@@ -6,25 +6,24 @@ data "aws_acm_certificate" "ssl_certificate_details" {
   most_recent = true
 }
 
-resource "aws_lb_target_group" "iaps_https" {
-  name     = "${local.short_environment_identifier}-iaps-https"
-  port     = 443
-  protocol = "HTTPS"
+resource "aws_lb_target_group" "iaps_http" {
+  name     = "${local.short_environment_identifier}-iaps-http"
+  port     = 8080
+  protocol = "HTTP"
   vpc_id   = "${local.vpc_id}"
 
   health_check = {
     interval = 60
     path     = "/"
-    port     = 443
-    protocol = "HTTPS"
+    port     = 8080
+    protocol = "HTTP"
     matcher  = "200-299"
   }
 }
 
-# NOTE this ALB may need refactoring as external if I2N can't connect via VPN
 resource "aws_lb" "iaps" {
   name               = "${local.short_environment_identifier}-iaps-alb"
-  internal           = true
+  internal           = false
   load_balancer_type = "application"
   security_groups    = ["${local.sg_lb_external_id}"]
 
@@ -42,7 +41,7 @@ resource "aws_lb_listener" "iaps_https" {
 
   default_action {
     type             = "forward"
-    target_group_arn = "${aws_lb_target_group.iaps_https.arn}"
+    target_group_arn = "${aws_lb_target_group.iaps_http.arn}"
   }
 }
 

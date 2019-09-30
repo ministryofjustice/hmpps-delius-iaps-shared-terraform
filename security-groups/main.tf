@@ -56,8 +56,8 @@ locals {
   sg_map_ids             = "${data.terraform_remote_state.common.sg_map_ids}"
 
   allowed_cidr_block = [
-    "${var.user_access_cidr_blocks}",
-    "${data.terraform_remote_state.common.nat_gateway_ips}",
+    "${data.terraform_remote_state.common.bastion_vpc_public_cidr}",
+    "${var.psn_proxy_cidrs}",
   ]
 
   bastion_cidr_block  = ["${data.terraform_remote_state.common.bastion_vpc_public_cidr}"]
@@ -88,16 +88,6 @@ resource "aws_security_group_rule" "external_lb_ingress_https" {
   ]
 }
 
-resource "aws_security_group_rule" "external_lb_egress_http" {
-  security_group_id        = "${local.external_lb_sg_id}"
-  type                     = "egress"
-  from_port                = 80
-  to_port                  = 80
-  protocol                 = "tcp"
-  source_security_group_id = "${local.internal_inst_sg_id}"
-  description              = "${local.common_name}-instance-internal-http"
-}
-
 resource "aws_security_group_rule" "external_lb_egress_https" {
   security_group_id        = "${local.external_lb_sg_id}"
   type                     = "egress"
@@ -108,31 +98,31 @@ resource "aws_security_group_rule" "external_lb_egress_https" {
   description              = "${local.common_name}-instance-internal-https"
 }
 
+resource "aws_security_group_rule" "external_lb_egress_http_iaps" {
+  security_group_id        = "${local.external_lb_sg_id}"
+  type                     = "egress"
+  from_port                = 8080
+  to_port                  = 8080
+  protocol                 = "tcp"
+  source_security_group_id = "${local.internal_inst_sg_id}"
+  description              = "${local.common_name}-instance-internal-http-iaps"
+}
+
 #-------------------------------------------------------------
 ### internal instance sg
 #-------------------------------------------------------------
-resource "aws_security_group_rule" "internal_lb_ingress_http" {
+resource "aws_security_group_rule" "internal_inst_sg_ingress_http" {
   security_group_id        = "${local.internal_inst_sg_id}"
   type                     = "ingress"
-  from_port                = 80
-  to_port                  = 80
+  from_port                = 8080
+  to_port                  = 8080
   protocol                 = "tcp"
   source_security_group_id = "${local.external_lb_sg_id}"
   description              = "${local.common_name}-lb-ingress-http"
 }
 
-resource "aws_security_group_rule" "internal_lb_ingress_https" {
-  security_group_id        = "${local.internal_inst_sg_id}"
-  type                     = "ingress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  source_security_group_id = "${local.external_lb_sg_id}"
-  description              = "${local.common_name}-lb-ingress-https"
-}
-
 # rdp
-resource "aws_security_group_rule" "internal_rdp" {
+resource "aws_security_group_rule" "internal_inst_sg_rdp" {
   security_group_id = "${local.internal_inst_sg_id}"
   type              = "ingress"
   from_port         = 3389
@@ -142,22 +132,13 @@ resource "aws_security_group_rule" "internal_rdp" {
   description       = "${local.common_name}-remote-access-rdp"
 }
 
-resource "aws_security_group_rule" "internal_inst_sg_ingress_self" {
-  security_group_id = "${local.internal_inst_sg_id}"
-  type              = "ingress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = -1
-  self              = true
-}
-
-resource "aws_security_group_rule" "internal_inst_sg_egress_self" {
+resource "aws_security_group_rule" "internal_inst_sg_egress_https" {
   security_group_id = "${local.internal_inst_sg_id}"
   type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = -1
-  self              = true
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks              = [ "0.0.0.0/0" ]
 }
 
 resource "aws_security_group_rule" "internal_inst_sg_egress_oracle" {
@@ -168,6 +149,16 @@ resource "aws_security_group_rule" "internal_inst_sg_egress_oracle" {
   protocol                 = "tcp"
   source_security_group_id = "${local.db_sg_id}"
   description              = "${local.common_name}-rds-sg"
+}
+
+resource "aws_security_group_rule" "internal_inst_sg_egress_smtp" {
+  security_group_id        = "${local.internal_inst_sg_id}"
+  type                     = "egress"
+  from_port                = "25"
+  to_port                  = "25"
+  protocol                 = "tcp"
+  cidr_blocks              = [ "0.0.0.0/0" ]
+  description              = "${local.common_name}-smtp-sg"
 }
 
 #-------------------------------------------------------------

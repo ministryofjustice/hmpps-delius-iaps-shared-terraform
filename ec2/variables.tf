@@ -13,7 +13,7 @@ variable "instance_type" {
 }
 
 variable "ebs_volume_size" {
-  default = 30
+  default = 50
 }
 
 variable "ebs_backup" {
@@ -32,4 +32,14 @@ variable "environment_name" {
 
 variable "project_name" {
   description = "The project name - delius-core"
+}
+
+variable "psn_proxy_endpoint" {
+  description = "PSN Proxies for connecting to IM - Note that there is only 1 PSN proxy and that targets the prod env"
+  default = "localhost"
+}
+
+variable "log_retention" {
+  description = "Days to keep cloudwatch logs"
+  default = 14
 }

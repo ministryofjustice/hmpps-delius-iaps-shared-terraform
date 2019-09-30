@@ -7,6 +7,7 @@ data "template_file" "instance_userdata" {
     external_domain   = "${local.external_domain}"
     user_ssm_path     = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_user"
     password_ssm_path = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_password"
+    psn_proxy_endpoint = "${var.psn_proxy_endpoint}"
   }
 }
 
@@ -80,14 +81,13 @@ resource "aws_autoscaling_group" "iaps" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
 
-  #launch_configuration      = "${aws_launch_configuration.iaps.name}"
   launch_template = {
     id      = "${aws_launch_template.iaps.id}"
     version = "$Latest"
   }
 
   target_group_arns = [
-    "${aws_lb_target_group.iaps_https.arn}",
+    "${aws_lb_target_group.iaps_http.arn}",
   ]
 
   enabled_metrics = [

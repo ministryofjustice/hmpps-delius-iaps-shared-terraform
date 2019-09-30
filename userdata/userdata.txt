@@ -12,7 +12,13 @@ $ComputerName = "${host_name}"
 [System.Environment]::SetEnvironmentVariable("ExternalDomain", "${external_domain}",[System.EnvironmentVariableTarget]::Machine)
 [System.Environment]::SetEnvironmentVariable("ExternalDomain", "${external_domain}", [System.EnvironmentVariableTarget]::Process)
 [System.Environment]::SetEnvironmentVariable("ExternalDomain", "${external_domain}", [System.EnvironmentVariableTarget]::User)
-   
+[System.Environment]::SetEnvironmentVariable("InternalDomain", "${internal_domain}",[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable("InternalDomain", "${internal_domain}", [System.EnvironmentVariableTarget]::Process)
+[System.Environment]::SetEnvironmentVariable("InternalDomain", "${internal_domain}", [System.EnvironmentVariableTarget]::User)
+[System.Environment]::SetEnvironmentVariable("PSNProxy", "${psn_proxy_endpoint}",[System.EnvironmentVariableTarget]::Machine)
+[System.Environment]::SetEnvironmentVariable("PSNProxy", "${psn_proxy_endpoint}", [System.EnvironmentVariableTarget]::Process)
+[System.Environment]::SetEnvironmentVariable("PSNProxy", "${psn_proxy_endpoint}", [System.EnvironmentVariableTarget]::User)
+
 Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "Hostname" 
 Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "NV Hostname" 
 
@@ -24,6 +30,13 @@ Set-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
 Set-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "NV Hostname" -value  $ComputerName
 Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -name "AltDefaultDomainName" -value $ComputerName
 Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -name "DefaultDomainName" -value $ComputerName
+
+# Resize system drive if overridden from ami value
+$MaxSize = (Get-PartitionSupportedSize -DriveLetter C).sizeMax
+Resize-Partition -DriveLetter C -Size $MaxSize
+
+# Set timezone
+tzutil /s 'GMT Standard Time' 
 
 # Run all scripts that apply runtime config
 $runtimeconfig = 'C:\Setup\RunTimeConfig'
