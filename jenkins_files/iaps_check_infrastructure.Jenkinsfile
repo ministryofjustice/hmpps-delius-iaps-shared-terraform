@@ -96,8 +96,12 @@ pipeline {
             }
         }
         stage('Dashboards') {
-            stage('Dashboard') { steps { catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                script {plan_submodule(project.config, environment_name, project.iaps, 'dashboards')}}}
+            steps { 
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    script {
+                        plan_submodule(project.config, environment_name, project.iaps, 'dashboards')
+                    }
+                }
             }
         }
     }
