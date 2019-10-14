@@ -183,6 +183,14 @@ pipeline {
             }
           }
         }
+
+        stage('IAPS Dashboards') {
+          steps {
+            script {
+              do_terraform(project.config, environment_name, project.iaps, 'dashboards')
+            }
+          }
+        }
     }
 
     post {
