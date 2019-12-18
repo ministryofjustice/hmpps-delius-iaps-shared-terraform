@@ -42,6 +42,7 @@ resource "aws_launch_template" "iaps" {
 
     security_groups = [
       "${local.sg_map_ids["sg_iaps_api_in"]}",
+      "${local.sg_map_ids["sg_iaps_api_out"]}",
       "${local.sg_outbound_id}",
     ]
   }
