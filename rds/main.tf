@@ -93,9 +93,10 @@ locals {
 ############################################
 
 module "kms_key" {
-  source       = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//kms"
+  source       = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=master//modules//kms"
   kms_key_name = "${local.common_name}"
   tags         = "${local.tags}"
+  kms_policy_location = "${var.environment_type == "prod" ? "policies/kms-cross-account-policy.json" : "policies/kms-policy.json"}"
 }
 
 #-------------------------------------------------------------
