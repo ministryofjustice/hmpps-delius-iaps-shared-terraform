@@ -43,3 +43,7 @@ variable "log_retention" {
   description = "Days to keep cloudwatch logs"
   default = 14
 }
+
+variable "iaps_asg_props" {
+  type = "map"
+}

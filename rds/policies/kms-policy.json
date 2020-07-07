@@ -6,7 +6,10 @@
             "Sid": "Enable IAM User Permissions",
             "Effect": "Allow",
             "Principal": {
-                "AWS": "arn:aws:iam::${accountID}:root"
+                "AWS":[
+                    "arn:aws:iam::${accountID}:role/del-stage-server-provison-ec2-role",
+                    "arn:aws:iam::${accountID}:root"
+                 ]
             },
             "Action": "kms:*",
             "Resource": "*"
@@ -16,7 +19,8 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [
-                    "arn:aws:iam::${accountID}:role/terraform"
+                    "arn:aws:iam::${accountID}:role/terraform",
+                    "arn:aws:iam::${accountID}:role/del-stage-server-provison-ec2-role"
                 ]
             },
             "Action": [

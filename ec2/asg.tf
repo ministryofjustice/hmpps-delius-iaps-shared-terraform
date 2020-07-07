@@ -30,7 +30,9 @@ resource "aws_launch_template" "iaps" {
     name = "${local.instance_profile}"
   }
 
-  image_id      = "${local.ami_id}"
+  #image_id      = "${local.ami_id}"
+  image_id      = "${var.iaps_asg_props["ami_id"]}"
+
   instance_type = "${var.instance_type}"
 
   monitoring {
