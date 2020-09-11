@@ -63,42 +63,42 @@ data "terraform_remote_state" "security-groups" {
   }
 }
 
-#-------------------------------------------------------------
-### Getting the latest amazon ami
-#-------------------------------------------------------------
-data "aws_ami" "amazon_ami" {
-  most_recent = true
-  owners      = ["895523100917"]
+# #-------------------------------------------------------------
+# ### Getting the latest amazon ami
+# #-------------------------------------------------------------
+# data "aws_ami" "amazon_ami" {
+#   most_recent = true
+#   owners      = ["895523100917"]
 
-  filter {
-    name   = "name"
-    values = ["HMPPS IAPS Windows Server master*"]
-  }
+#   filter {
+#     name   = "name"
+#     values = ["HMPPS IAPS Windows Server master*"]
+#   }
 
-  # correct arch
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
+#   # correct arch
+#   filter {
+#     name   = "architecture"
+#     values = ["x86_64"]
+#   }
 
-  # Owned by Amazon
-  filter {
-    name   = "owner-id"
-    values = ["895523100917"]
-  }
+#   # Owned by Amazon
+#   filter {
+#     name   = "owner-id"
+#     values = ["895523100917"]
+#   }
 
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
+#   filter {
+#     name   = "virtualization-type"
+#     values = ["hvm"]
+#   }
+# }
 
 ####################################################
 # Locals
 ####################################################
 
 locals {
-  ami_id                       = "${data.aws_ami.amazon_ami.id}"
+  # ami_id                       = "${data.aws_ami.amazon_ami.id}"
   vpc_id                       = "${data.terraform_remote_state.common.vpc_id}"
   internal_domain              = "${data.terraform_remote_state.common.internal_domain}"
   external_domain              = "${data.terraform_remote_state.common.external_domain}"
@@ -116,4 +116,5 @@ locals {
   private_subnet_ids           = ["${data.terraform_remote_state.common.private_subnet_ids}"]
   public_subnet_ids            = ["${data.terraform_remote_state.common.public_subnet_ids}"]
   backup_ebs_role_arn          = "${data.terraform_remote_state.iam.backup_ebs_role_arn}"
+
 }

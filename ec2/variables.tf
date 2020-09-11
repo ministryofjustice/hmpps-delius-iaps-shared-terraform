@@ -47,3 +47,11 @@ variable "log_retention" {
 variable "iaps_asg_props" {
   type = "map"
 }
+
+variable "iaps_asgv2_props" {
+  type = "map"
+}
+
+variable "iaps_asg_suspended_processes" {
+  type = "map"
+}
