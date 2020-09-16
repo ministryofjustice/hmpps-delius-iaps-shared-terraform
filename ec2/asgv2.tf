@@ -1,8 +1,8 @@
-data "template_file" "instance_userdata" {
-  template = "${file("../userdata/userdata.tpl")}"
+data "template_file" "instance_userdatav2" {
+  template = "${file("../userdata/userdatav2.tpl")}"
 
   vars {
-    host_name         = "${local.iaps_role}-001"
+    host_name         = "${local.iaps_role}-002"
     internal_domain   = "${local.internal_domain}"
     external_domain   = "${local.external_domain}"
     user_ssm_path     = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_user"
@@ -11,9 +11,8 @@ data "template_file" "instance_userdata" {
   }
 }
 
-resource "aws_launch_template" "iaps" {
-  name = "${var.iaps_asg_props["launch_template_name"]}"
-  # name_prefix = "${local.environment-name}-${local.application}-iaps-pri-tpl"
+resource "aws_launch_template" "iapsv2" {
+  name_prefix = "${local.environment-name}-${local.application}-iapsv2-pri-tpl"
   description = "Windows IAPS Server Launch Template"
 
   block_device_mappings {
@@ -33,12 +32,10 @@ resource "aws_launch_template" "iaps" {
     name = "${local.instance_profile}"
   }
 
-  image_id      = "${var.iaps_asg_props["ami_id"]}"
+  image_id      = "${var.iaps_asgv2_props["ami_id"]}"
 
   instance_type = "${var.instance_type}"
-  
-  # latest_version = "3"
-  
+
   monitoring {
     enabled = true
   }
@@ -53,36 +50,33 @@ resource "aws_launch_template" "iaps" {
     ]
   }
 
-  user_data = "${base64encode(data.template_file.instance_userdata.rendered)}"
+  user_data = "${base64encode(data.template_file.instance_userdatav2.rendered)}"
 
   tag_specifications {
     resource_type = "instance"
-    tags          = "${merge(local.tags, map("Name", "${var.environment_name}-${var.project_name}-iaps-ec2"))}"
+    tags          = "${merge(local.tags, map("Name", "${var.environment_name}-${var.project_name}-iapsv2-ec2"))}"
   }
 
   tag_specifications {
     resource_type = "volume"
-    tags          = "${merge(local.tags, map("Name", "${var.environment_name}-${var.project_name}-iaps-ebs"))}"
+    tags          = "${merge(local.tags, map("Name", "${var.environment_name}-${var.project_name}-iapsv2-ebs"))}"
   }
-
-  lifecycle { ignore_changes = ["user_data", "name_prefix"] }
-
 }
 
 # Hack to merge additional tag into existing map and convert to list for use with asg tags input
-data "null_data_source" "asg-tags" {
-  count = "${length(keys(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iaps-asg"))))}"
-  
+data "null_data_source" "asg-tagsv2" {
+  count = "${length(keys(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iapsv2-asg"))))}"
+
   inputs = {
-    key                 = "${element(keys(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iaps-asg"))), count.index)}"
-    value               = "${element(values(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iaps-asg"))), count.index)}"
+    key                 = "${element(keys(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iapsv2-asg"))), count.index)}"
+    value               = "${element(values(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iapsv2-asg"))), count.index)}"
     propagate_at_launch = "true"
   }
 }
 
-# v1 ASG which uses AMI created by John Barber
-resource "aws_autoscaling_group" "iaps" {
-  name = "${local.environment-name}-${local.application}-iaps-asg"
+# new v2 ASG which will use new IAPS AMI built by packer (not manually)
+resource "aws_autoscaling_group" "iapsv2" {
+  name = "${local.environment-name}-${local.application}-iapsv2-asg"
 
   vpc_zone_identifier = ["${local.private_subnet_ids}"]
 
@@ -93,7 +87,7 @@ resource "aws_autoscaling_group" "iaps" {
   health_check_type         = "EC2"
 
   launch_template = {
-    id      = "${var.iaps_asg_props["launch_template_id"]}"
+    id      = "${aws_launch_template.iapsv2.id}"
     version = "$Latest"
   }
 
@@ -108,7 +102,5 @@ resource "aws_autoscaling_group" "iaps" {
     "GroupTotalInstances",
   ]
 
-  suspended_processes = "${var.iaps_asg_suspended_processes["processes"]}"
-
-  tags = ["${data.null_data_source.asg-tags.*.outputs}"]
+  tags = ["${data.null_data_source.asg-tagsv2.*.outputs}"]
 }

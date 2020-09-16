@@ -36,3 +36,15 @@ data "template_file" "iaps_dashboard" {
     project_name     = "${var.project_name}"
   }
 }
+
+
+data "template_file" "iaps_dashboard_v2" {
+  template = "${file("${path.module}/templates/dashboards/iaps_v2.tpl")}"
+
+  vars {
+    region           = "${var.region}"
+    environment_name = "${var.environment_name}"
+    project_name     = "${var.project_name}"
+  }
+}
+
