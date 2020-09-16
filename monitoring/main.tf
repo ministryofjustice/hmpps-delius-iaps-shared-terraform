@@ -36,3 +36,17 @@ data "terraform_remote_state" "ec2" {
     region = "${var.region}"
   }
 }
+
+
+#-------------------------------------------------------------
+### Getting the rds instance details
+#-------------------------------------------------------------
+data "terraform_remote_state" "rds" {
+  backend = "s3"
+
+  config {
+    bucket = "${var.remote_state_bucket_name}"
+    key    = "iaps/rds/terraform.tfstate"
+    region = "${var.region}"
+  }
+}

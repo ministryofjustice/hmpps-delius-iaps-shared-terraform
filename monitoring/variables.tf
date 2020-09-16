@@ -57,3 +57,7 @@ variable "dashboards_enabled" {
   description = "Enable IAPS Cloudwatch Dashboards in the environment"
   default     = "false"
 }
+
+variable "iaps_monitoring_rds_db_instance_identifier" {
+  type    = "string"
+}
