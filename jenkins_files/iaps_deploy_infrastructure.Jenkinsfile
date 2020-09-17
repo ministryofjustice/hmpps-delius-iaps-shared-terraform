@@ -184,6 +184,14 @@ pipeline {
           }
         }
 
+        stage('IAPS Monitoring and Alarms') {
+          steps {
+            script {
+              do_terraform(project.config, environment_name, project.iaps, 'monitoring')
+            }
+          }
+        }
+
         stage('IAPS Dashboards') {
           steps {
             script {
