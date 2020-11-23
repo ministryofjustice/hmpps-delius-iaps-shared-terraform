@@ -11,7 +11,7 @@ def environments = [
 def prepare_env() {
     sh '''
     #!/usr/env/bin bash
-    docker pull mojdigitalstudio/hmpps-terraform-builder:latest
+    docker pull mojdigitalstudio/hmpps-terraform-builder-0-11-14:latest
     '''
 }
 
