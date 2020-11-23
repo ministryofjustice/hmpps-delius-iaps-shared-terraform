@@ -50,7 +50,7 @@ def plan_submodule(config_dir, env_name, git_project_dir, submodule_name) {
 
 pipeline {
 
-    agent { label "jenkins_slave" }
+    agent { label "jenkins_agent" }
 
     parameters {
         string(name: 'CONFIG_BRANCH', description: 'Target Branch for hmpps-env-configs', defaultValue: 'master')
@@ -100,6 +100,16 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     script {
                         plan_submodule(project.config, environment_name, project.iaps, 'dashboards')
+                    }
+                }
+            }
+        }
+
+        stage('Monitoring') {
+            steps { 
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    script {
+                        plan_submodule(project.config, environment_name, project.iaps, 'monitoring')
                     }
                 }
             }

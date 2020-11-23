@@ -125,7 +125,7 @@ def debug_env() {
 
 pipeline {
 
-    agent { label "jenkins_slave" }
+    agent { label "jenkins_agent" }
 
 
     stages {
@@ -180,6 +180,14 @@ pipeline {
           steps {
             script {
               do_terraform(project.config, environment_name, project.iaps, 'ec2')
+            }
+          }
+        }
+
+        stage('IAPS Monitoring and Alarms') {
+          steps {
+            script {
+              do_terraform(project.config, environment_name, project.iaps, 'monitoring')
             }
           }
         }
