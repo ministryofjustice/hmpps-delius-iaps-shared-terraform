@@ -65,5 +65,21 @@ write-output 'Stopping IAPS Windows Services'
 Write-output '-----------------------------------------------------------------'
 stop-service IapsNDeliusInterfaceWinService
 stop-service IMIapsInterfaceWinService
+
+#====================================================================
+# we need to restart the instance at least once otherwise the WMI 
+# won't work as we've changed computername
+#====================================================================
+ $restartsfile = "C:\setup\computer-restarts.txt"
+If (Test-Path -Path $restartsfile ) { 
+    Write-Output "Writing file $restartsfile for 1st time"
+    Write-Output "$(Get-Date) - instance has already performed 1st restart." | Out-File $restartsfile -append
+}
+else {
+    Write-Output 'File does not exist so we have not restarted yet'
+    Write-Output "$(Get-Date) - instance 1st restart." | Out-File $restartsfile -append
+    Restart-Computer -Force
+}
+
 </powershell>
 <persist>true</persist>
