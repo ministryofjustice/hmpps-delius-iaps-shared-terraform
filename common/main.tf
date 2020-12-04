@@ -3,10 +3,10 @@ terraform {
   backend "s3" {}
 }
 
-provider "aws" {
-  region  = "${var.region}"
-  version = "~> 1.16"
-}
+# provider "aws" {
+#   region  = "${var.region}"
+#   version = "~> 2.70"
+# }
 
 ####################################################
 # DATA SOURCE MODULES FROM OTHER TERRAFORM BACKENDS
@@ -78,6 +78,8 @@ data "terraform_remote_state" "security-groups" {
 #-------------------------------------------------------------
 data "aws_ami" "amazon_ami" {
   most_recent = true
+
+  owners      = ["895523100917"]
 
   filter {
     name   = "name"

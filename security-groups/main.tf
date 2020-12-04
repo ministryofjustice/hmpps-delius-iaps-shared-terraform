@@ -5,7 +5,7 @@ terraform {
 
 provider "aws" {
   region  = "${var.region}"
-  version = "~> 1.16"
+  version = "~> 2.70"
 }
 
 ####################################################
@@ -60,7 +60,7 @@ locals {
     "${var.psn_proxy_cidrs}",
   ]
 
-  bastion_cidr_block  = ["${data.terraform_remote_state.common.bastion_vpc_public_cidr}"]
+  bastion_cidr_block  = "${data.terraform_remote_state.common.bastion_vpc_public_cidr}"
   internal_inst_sg_id = "${data.terraform_remote_state.common.sg_map_ids["sg_iaps_api_in"]}"
   db_sg_id            = "${data.terraform_remote_state.common.sg_map_ids["sg_iaps_db_in"]}"
   external_lb_sg_id   = "${data.terraform_remote_state.common.sg_map_ids["sg_iaps_external_lb_in"]}"
@@ -75,12 +75,20 @@ locals {
 ### internal instance sg
 #-------------------------------------------------------------
 # rdp
+
+# bastion_vpc_public_cidr = [
+#     10.160.98.0/28,
+#     10.160.98.16/28,
+#     10.160.98.32/28
+# ]
+
 resource "aws_security_group_rule" "internal_inst_sg_rdp" {
   security_group_id = "${local.internal_inst_sg_id}"
   type              = "ingress"
   from_port         = 3389
   to_port           = 3389
   protocol          = "tcp"
+  # cidr_blocks       = "${local.bastion_cidr_block}"
   cidr_blocks       = ["${local.bastion_cidr_block}"]
   description       = "${local.common_name}-remote-access-rdp"
 }
