@@ -12,21 +12,18 @@ remote_state {
 
 terraform {
   extra_arguments "common_vars" {
-    commands = [
-      "destroy",
-      "plan",
-      "import",
-      "push",
-      "refresh",
-      "taint",
-      "untaint",
-    ]
+    commands = get_terraform_commands_that_need_vars()
 
-    arguments = [
-      "-var-file=${get_parent_terragrunt_dir()}/env_configs/${get_env("TG_COMMON_DIRECTORY","common")}/common.tfvars",
-      "-var-file=${get_parent_terragrunt_dir()}/env_configs/${get_env("TG_ENVIRONMENT_NAME", "ENVIRONMENT")}/${get_env("TG_ENVIRONMENT_NAME", "ENVIRONMENT")}.tfvars",
-      "-var-file=${get_parent_terragrunt_dir()}/env_configs/${get_env("TG_ENVIRONMENT_NAME", "ENVIRONMENT")}/sub-projects/iaps.tfvars",
+    optional_var_files = [
+      "${get_parent_terragrunt_dir()}/env_configs/${get_env("TG_COMMON_DIRECTORY","common")}/common.tfvars",
+      "${get_parent_terragrunt_dir()}/env_configs/${get_env("TG_ENVIRONMENT_NAME", "ENVIRONMENT")}/${get_env("TG_ENVIRONMENT_NAME", "ENVIRONMENT")}.tfvars",
+      "${get_parent_terragrunt_dir()}/env_configs/${get_env("TG_ENVIRONMENT_NAME", "ENVIRONMENT")}/sub-projects/iaps.tfvars"
     ]
+  }
+
+  extra_arguments "disable_input" {
+    commands  = get_terraform_commands_that_need_input()
+    arguments = ["-input=false"]
   }
 }
 
