@@ -1,15 +1,3 @@
-terraform {
-  # The configuration for this backend will be filled in by Terragrunt
-  # The configuration for this backend will be filled in by Terragrunt
-  backend "s3" {
-  }
-}
-
-provider "aws" {
-  region  = var.region
-  version = "~> 1.16"
-}
-
 ####################################################
 # DATA SOURCE MODULES FROM OTHER TERRAFORM BACKENDS
 ####################################################
@@ -83,6 +71,8 @@ data "terraform_remote_state" "security-groups" {
 data "aws_ami" "amazon_ami" {
   most_recent = true
 
+  owners      = ["895523100917"]
+
   filter {
     name   = "name"
     values = ["HMPPS Alfresco master*"]
@@ -102,6 +92,8 @@ data "aws_ami" "amazon_ami" {
     name   = "root-device-type"
     values = ["ebs"]
   }
+
+  
 }
 
 ####################################################
@@ -242,7 +234,7 @@ resource "aws_security_group_rule" "https" {
 # ### S3 bucket for config
 # #--------------------------------------------
 module "s3config_bucket" {
-  source         = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//s3bucket//s3bucket_without_policy"
+  source         = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//s3bucket//s3bucket_without_policy?ref=terraform-0.12"
   s3_bucket_name = local.common_name
   tags           = local.tags
 }
