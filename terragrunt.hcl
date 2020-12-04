@@ -7,9 +7,8 @@ remote_state {
       key            = "iaps/${get_env("TG_ENVIRONMENT_TYPE", "ENVIRONMENT")}/${path_relative_to_include()}/terraform.tfstate"
       region         = "${get_env("TG_REGION", "AWS-REGION")}"
       dynamodb_table = "${get_env("TG_ENVIRONMENT_IDENTIFIER", "ENVIRONMENT_IDENTIFIER")}-lock-table"
-    }
   }
-
+  
   generate = {
     path = "backend.tf"
     if_exists = "skip"
