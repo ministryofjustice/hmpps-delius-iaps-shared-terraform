@@ -3,7 +3,8 @@ variable "eng_remote_state_bucket_name" {
   description = "Terraform remote state bucket name"
 }
 
-variable "eng_role_arn" {}
+variable "eng_role_arn" {
+}
 
 variable "environment_identifier" {
   description = "resource label or name"
@@ -25,13 +26,17 @@ variable "remote_state_bucket_name" {
   description = "Terraform remote state bucket name"
 }
 
-variable "lb_account_id" {}
+variable "lb_account_id" {
+}
 
-variable "role_arn" {}
+variable "role_arn" {
+}
 
-variable "route53_hosted_zone_id" {}
+variable "route53_hosted_zone_id" {
+}
 
-variable "iaps_app_name" {}
+variable "iaps_app_name" {
+}
 
 variable "cloudwatch_log_retention" {
   default = "14"
@@ -41,5 +46,9 @@ variable "password_length" {
   default = "18"
 }
 
-variable "environment_name" {}
-variable "project_name" {}
+variable "environment_name" {
+}
+
+variable "project_name" {
+}
+
