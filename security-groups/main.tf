@@ -75,20 +75,12 @@ locals {
 ### internal instance sg
 #-------------------------------------------------------------
 # rdp
-
-# bastion_vpc_public_cidr = [
-#     10.160.98.0/28,
-#     10.160.98.16/28,
-#     10.160.98.32/28
-# ]
-
 resource "aws_security_group_rule" "internal_inst_sg_rdp" {
   security_group_id = "${local.internal_inst_sg_id}"
   type              = "ingress"
   from_port         = 3389
   to_port           = 3389
   protocol          = "tcp"
-  # cidr_blocks       = "${local.bastion_cidr_block}"
   cidr_blocks       = ["${local.bastion_cidr_block}"]
   description       = "${local.common_name}-remote-access-rdp"
 }

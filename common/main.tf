@@ -3,10 +3,10 @@ terraform {
   backend "s3" {}
 }
 
-# provider "aws" {
-#   region  = "${var.region}"
-#   version = "~> 2.70"
-# }
+provider "aws" {
+  region  = "${var.region}"
+  version = "~> 2.70"
+}
 
 ####################################################
 # DATA SOURCE MODULES FROM OTHER TERRAFORM BACKENDS
