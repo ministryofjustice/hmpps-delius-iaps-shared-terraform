@@ -5,7 +5,7 @@ terraform {
 
 provider "aws" {
   region  = "${var.region}"
-  version = "~> 1.16"
+  version = "~> 2.70"
 }
 
 ####################################################
@@ -60,7 +60,7 @@ locals {
     "${var.psn_proxy_cidrs}",
   ]
 
-  bastion_cidr_block  = ["${data.terraform_remote_state.common.bastion_vpc_public_cidr}"]
+  bastion_cidr_block  = "${data.terraform_remote_state.common.bastion_vpc_public_cidr}"
   internal_inst_sg_id = "${data.terraform_remote_state.common.sg_map_ids["sg_iaps_api_in"]}"
   db_sg_id            = "${data.terraform_remote_state.common.sg_map_ids["sg_iaps_db_in"]}"
   external_lb_sg_id   = "${data.terraform_remote_state.common.sg_map_ids["sg_iaps_external_lb_in"]}"

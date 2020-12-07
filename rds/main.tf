@@ -5,7 +5,7 @@ terraform {
 
 provider "aws" {
   region  = "${var.region}"
-  version = "~> 1.16"
+  version = "~> 2.70"
 }
 
 ####################################################
@@ -159,7 +159,7 @@ module "db_option_group" {
 ############################################
 
 module "db_instance" {
-  source = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//rds//db_instance"
+  source = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=issues/213/ALS-2335-terraform_11_14_update-mis//modules//rds//db_instance"
 
   create            = true
   identifier        = "${local.common_name}"
