@@ -111,4 +111,6 @@ resource "aws_autoscaling_group" "iaps" {
   suspended_processes = "${var.iaps_asg_suspended_processes["processes"]}"
 
   tags = ["${data.null_data_source.asg-tags.*.outputs}"]
+
+  
 }

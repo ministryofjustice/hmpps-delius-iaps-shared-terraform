@@ -1,32 +1,37 @@
-variable "region" {}
+variable "region" {
+}
 
 variable "remote_state_bucket_name" {
   description = "Terraform remote state bucket name"
 }
 
-variable depends_on {
-  default = []
-  type    = "list"
-}
+#variable "depends_on" {
+#  default = []
+#  type    = list(string)
+#}
 
 # PARAMETER GROUP
 variable "parameters" {
   default = []
-  type    = "list"
+  type    = list(string)
 }
 
 # DB option group
 variable "options" {
-  type        = "list"
+  type        = list(string)
   description = "A list of Options to apply."
   default     = []
 }
 
 # INSTANCE
-variable "rds_family" {}
+variable "rds_family" {
+}
 
-variable "rds_major_engine_version" {}
-variable "rds_engine" {}
+variable "rds_major_engine_version" {
+}
+
+variable "rds_engine" {
+}
 
 variable "rds_engine_version" {
   description = "The engine version to use"
@@ -151,3 +156,4 @@ variable "rds_character_set_name" {
 variable "environment_type" {
   description = "The environment type - e.g. dev"
 }
+

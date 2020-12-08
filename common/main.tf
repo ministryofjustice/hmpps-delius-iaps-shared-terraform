@@ -204,6 +204,9 @@ resource "aws_security_group" "vpc-sg-outbound" {
     {
       "Name" = "${local.common_name}-outbound-traffic"
     },
+    {
+      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+    },
   )
 
   lifecycle {

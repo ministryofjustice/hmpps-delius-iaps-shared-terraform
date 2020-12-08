@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../hmpps-env-configs"
+		},
+		{
+			"path": "../hmpps-terraform-modules"
+		},
+		{
+			"path": "../../../common"
+		}
+	],
+	"settings": {}
+}
