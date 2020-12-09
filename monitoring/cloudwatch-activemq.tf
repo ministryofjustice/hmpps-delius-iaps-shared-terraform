@@ -14,7 +14,6 @@
 #     LoadBalancerName = data.terraform_remote_state.spg.outputs.jms_lb["name"]
 #   }
 # }
-
 # resource "aws_cloudwatch_metric_alarm" "inbound_queue_size_warning_alarm" {
 #   alarm_name          = "${var.environment_name}-activemq-inbound-queue-size-cwa--warning"
 #   alarm_description   = "Inbound queue size exceeded 30 for 30 minutes."
@@ -31,7 +30,6 @@
 #     AutoScalingGroupName = data.terraform_remote_state.spg.outputs.asg["name"]
 #   }
 # }
-
 # resource "aws_cloudwatch_metric_alarm" "inbound_queue_size_critical_alarm" {
 #   alarm_name          = "${var.environment_name}-activemq-inbound-queue-size-cwa--critical"
 #   alarm_description   = "Inbound queue size exceeded 100 for 3 hours."
@@ -48,7 +46,6 @@
 #     AutoScalingGroupName = data.terraform_remote_state.spg.outputs.asg["name"]
 #   }
 # }
-
 # resource "aws_cloudwatch_metric_alarm" "inbound_queue_rate_critical_alarm" {
 #   alarm_name          = "${var.environment_name}-activemq-inbound-queue-rate-cwa--critical"
 #   alarm_description   = "Inbound queue size increased at an elevated rate for over 10 minutes. Failover to standby may be required."
@@ -76,4 +73,3 @@
 #     }
 #   }
 # }
-

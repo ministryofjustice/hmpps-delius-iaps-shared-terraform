@@ -7,7 +7,6 @@
 #   targetgroup_arn  = data.terraform_remote_state.ndelius.outputs.weblogic_targetgroup["arn"]
 #   action_arn       = aws_sns_topic.alarm_notification.arn
 # }
-
 # module "interface_weblogic_alarms" {
 #   environment_name = var.environment_name
 #   source           = "../modules/weblogic_alarms"
@@ -17,7 +16,6 @@
 #   targetgroup_arn  = data.terraform_remote_state.interface.outputs.weblogic_targetgroup["arn"]
 #   action_arn       = aws_sns_topic.alarm_notification.arn
 # }
-
 # module "spg_weblogic_alarms" {
 #   environment_name = var.environment_name
 #   source           = "../modules/weblogic_alarms"
@@ -27,7 +25,6 @@
 #   targetgroup_arn  = data.terraform_remote_state.spg.outputs.weblogic_targetgroup["arn"]
 #   action_arn       = aws_sns_topic.alarm_notification.arn
 # }
-
 # resource "aws_cloudwatch_metric_alarm" "response_time_warning_alarm" {
 #   alarm_name          = "${var.environment_name}-ndelius-response-time-cwa--warning"
 #   alarm_description   = "NDelius front-end response time exceeded 1 second."
@@ -44,7 +41,6 @@
 #     LoadBalancer = local.ndelius_alb_id
 #   }
 # }
-
 # resource "aws_cloudwatch_metric_alarm" "response_time_critical_alarm" {
 #   alarm_name          = "${var.environment_name}-ndelius-response-time-cwa--critical"
 #   alarm_description   = "NDelius front-end response time exceeded 5 seconds."
@@ -61,7 +57,6 @@
 #     LoadBalancer = local.ndelius_alb_id
 #   }
 # }
-
 # resource "aws_cloudwatch_metric_alarm" "response_time_fatal_alarm" {
 #   alarm_name          = "${var.environment_name}-ndelius-response-time-cwa--fatal"
 #   alarm_description   = "NDelius front-end response time exceeded 5 seconds for an extended period of time."
@@ -78,4 +73,3 @@
 #     LoadBalancer = local.ndelius_alb_id
 #   }
 # }
-

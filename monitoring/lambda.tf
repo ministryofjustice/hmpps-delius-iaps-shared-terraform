@@ -6,7 +6,6 @@
 #   handler          = "notify-slack-alarm.handler"
 #   source_code_hash = "${filebase64sha256(data.archive_file.alarm_lambda_handler_zip.output_path)}"
 # }
-
 # resource "aws_lambda_permission" "sns_alarm" {
 #   statement_id  = "AllowExecutionFromSNS"
 #   action        = "lambda:InvokeFunction"

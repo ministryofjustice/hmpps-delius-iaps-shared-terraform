@@ -1,5 +1,5 @@
 data "aws_sns_topic" "alarm_notification" {
-  name = "${data.terraform_remote_state.sns.aws_sns_topic_alarm_notification_name}"
+  name = data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_name
 }
 
 # resource "aws_sns_topic_subscription" "alarm_subscription" {

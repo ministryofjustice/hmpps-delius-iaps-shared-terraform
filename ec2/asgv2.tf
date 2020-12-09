@@ -1,13 +1,19 @@
 data "template_file" "instance_userdatav2" {
-  template = "${file("../userdata/userdatav2.tpl")}"
+  template = file("../userdata/userdatav2.tpl")
 
-  vars {
-    host_name         = "${local.iaps_role}-002"
-    internal_domain   = "${local.internal_domain}"
-    external_domain   = "${local.external_domain}"
-    user_ssm_path     = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_user"
-    password_ssm_path = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_password"
-    psn_proxy_endpoint = "${var.psn_proxy_endpoint}"
+  vars = {
+    host_name          = "${local.iaps_role}-002"
+    internal_domain    = local.internal_domain
+    external_domain    = local.external_domain
+    user_ssm_path      = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_user"
+    password_ssm_path  = "/${local.environment-name}/${local.application}/iaps/iaps/iaps_password"
+    psn_proxy_endpoint = var.psn_proxy_endpoint
+  }
+}
+
+resource "null_resource" "iaps_aws_launch_template_userdatav2_rendered" {
+  triggers = {
+    json = data.template_file.instance_userdatav2.rendered
   }
 }
 
@@ -20,7 +26,7 @@ resource "aws_launch_template" "iapsv2" {
 
     ebs {
       volume_type = "gp2"
-      volume_size = "${var.ebs_volume_size}"
+      volume_size = var.ebs_volume_size
     }
   }
 
@@ -29,12 +35,12 @@ resource "aws_launch_template" "iapsv2" {
   ebs_optimized = true
 
   iam_instance_profile {
-    name = "${local.instance_profile}"
+    name = local.instance_profile
   }
 
-  image_id      = "${var.iaps_asgv2_props["ami_id"]}"
+  image_id = var.iaps_asgv2_props["ami_id"]
 
-  instance_type = "${var.instance_type}"
+  instance_type = var.instance_type
 
   monitoring {
     enabled = true
@@ -44,32 +50,71 @@ resource "aws_launch_template" "iapsv2" {
     associate_public_ip_address = false
 
     security_groups = [
-      "${local.sg_map_ids["sg_iaps_api_in"]}",
-      "${local.sg_map_ids["sg_iaps_api_out"]}",
-      "${local.sg_outbound_id}",
+      local.sg_map_ids["sg_iaps_api_in"],
+      local.sg_map_ids["sg_iaps_api_out"],
+      local.sg_outbound_id,
     ]
   }
 
-  user_data = "${base64encode(data.template_file.instance_userdatav2.rendered)}"
+  user_data = base64encode(data.template_file.instance_userdatav2.rendered)
 
   tag_specifications {
     resource_type = "instance"
-    tags          = "${merge(local.tags, map("Name", "${var.environment_name}-${var.project_name}-iapsv2-ec2"))}"
+    tags = merge(
+      local.tags,
+      {
+        "Name" = "${var.environment_name}-${var.project_name}-iapsv2-ec2"
+      },
+    )
   }
 
   tag_specifications {
     resource_type = "volume"
-    tags          = "${merge(local.tags, map("Name", "${var.environment_name}-${var.project_name}-iapsv2-ebs"))}"
+    tags = merge(
+      local.tags,
+      {
+        "Name" = "${var.environment_name}-${var.project_name}-iapsv2-ebs"
+      },
+    )
   }
 }
 
 # Hack to merge additional tag into existing map and convert to list for use with asg tags input
 data "null_data_source" "asg-tagsv2" {
-  count = "${length(keys(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iapsv2-asg"))))}"
+  count = length(
+    keys(
+      merge(
+        local.tags,
+        {
+          "Name" = "${local.environment-name}-${var.project_name}-iapsv2-asg"
+        },
+      ),
+    ),
+  )
 
   inputs = {
-    key                 = "${element(keys(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iapsv2-asg"))), count.index)}"
-    value               = "${element(values(merge(local.tags, map("Name", "${local.environment-name}-${var.project_name}-iapsv2-asg"))), count.index)}"
+    key = element(
+      keys(
+        merge(
+          local.tags,
+          {
+            "Name" = "${local.environment-name}-${var.project_name}-iapsv2-asg"
+          },
+        ),
+      ),
+      count.index,
+    )
+    value = element(
+      values(
+        merge(
+          local.tags,
+          {
+            "Name" = "${local.environment-name}-${var.project_name}-iapsv2-asg"
+          },
+        ),
+      ),
+      count.index,
+    )
     propagate_at_launch = "true"
   }
 }
@@ -78,7 +123,15 @@ data "null_data_source" "asg-tagsv2" {
 resource "aws_autoscaling_group" "iapsv2" {
   name = "${local.environment-name}-${local.application}-iapsv2-asg"
 
-  vpc_zone_identifier = ["${local.private_subnet_ids}"]
+  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
+  # force an interpolation expression to be interpreted as a list by wrapping it
+  # in an extra set of list brackets. That form was supported for compatibility in
+  # v0.11, but is no longer supported in Terraform v0.12.
+  #
+  # If the expression in the following list itself returns a list, remove the
+  # brackets to avoid interpretation as a list of lists. If the expression
+  # returns a single list item then leave it as-is and remove this TODO comment.
+  vpc_zone_identifier = local.private_subnet_ids
 
   desired_capacity          = 1
   max_size                  = 1
@@ -86,8 +139,8 @@ resource "aws_autoscaling_group" "iapsv2" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
 
-  launch_template = {
-    id      = "${aws_launch_template.iapsv2.id}"
+  launch_template {
+    id      = aws_launch_template.iapsv2.id
     version = "$Latest"
   }
 
@@ -102,5 +155,6 @@ resource "aws_autoscaling_group" "iapsv2" {
     "GroupTotalInstances",
   ]
 
-  tags = ["${data.null_data_source.asg-tagsv2.*.outputs}"]
+  tags = data.null_data_source.asg-tagsv2.*.outputs
 }
+

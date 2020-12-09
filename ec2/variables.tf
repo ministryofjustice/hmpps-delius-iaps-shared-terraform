@@ -1,4 +1,5 @@
-variable "region" {}
+variable "region" {
+}
 
 variable "remote_state_bucket_name" {
   description = "Terraform remote state bucket name"
@@ -17,7 +18,7 @@ variable "ebs_volume_size" {
 }
 
 variable "ebs_backup" {
-  type = "map"
+  type = map(string)
 
   default = {
     schedule           = "cron(0 04 * * ? *)"
@@ -27,7 +28,7 @@ variable "ebs_backup" {
 }
 
 variable "environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "project_name" {
@@ -36,22 +37,23 @@ variable "project_name" {
 
 variable "psn_proxy_endpoint" {
   description = "PSN Proxies for connecting to IM - Note that there is only 1 PSN proxy and that targets the prod env"
-  default = "localhost"
+  default     = "localhost"
 }
 
 variable "log_retention" {
   description = "Days to keep cloudwatch logs"
-  default = 14
+  default     = 14
 }
 
 variable "iaps_asg_props" {
-  type = "map"
+  type = map(string)
 }
 
 variable "iaps_asgv2_props" {
-  type = "map"
+  type = map(string)
 }
 
 variable "iaps_asg_suspended_processes" {
-  type = "map"
+  type = list(string)
 }
+
