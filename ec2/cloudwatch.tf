@@ -6,6 +6,9 @@ resource "aws_cloudwatch_log_group" "iaps_log_group" {
     {
       "Name" = "IAPS"
     },
+    {
+    "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+    },
   )
 }
 

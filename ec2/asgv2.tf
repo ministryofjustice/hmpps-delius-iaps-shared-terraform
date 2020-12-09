@@ -65,6 +65,9 @@ resource "aws_launch_template" "iapsv2" {
       {
         "Name" = "${var.environment_name}-${var.project_name}-iapsv2-ec2"
       },
+      {
+      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+      },
     )
   }
 
@@ -74,6 +77,9 @@ resource "aws_launch_template" "iapsv2" {
       local.tags,
       {
         "Name" = "${var.environment_name}-${var.project_name}-iapsv2-ebs"
+      },
+      {
+      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
       },
     )
   }
@@ -88,6 +94,9 @@ data "null_data_source" "asg-tagsv2" {
         {
           "Name" = "${local.environment-name}-${var.project_name}-iapsv2-asg"
         },
+        {
+        "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+        },
       ),
     ),
   )
@@ -100,6 +109,9 @@ data "null_data_source" "asg-tagsv2" {
           {
             "Name" = "${local.environment-name}-${var.project_name}-iapsv2-asg"
           },
+          {
+            "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+          },
         ),
       ),
       count.index,
@@ -110,6 +122,9 @@ data "null_data_source" "asg-tagsv2" {
           local.tags,
           {
             "Name" = "${local.environment-name}-${var.project_name}-iapsv2-asg"
+          },
+          {
+            "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
           },
         ),
       ),
@@ -156,5 +171,15 @@ resource "aws_autoscaling_group" "iapsv2" {
   ]
 
   tags = data.null_data_source.asg-tagsv2.*.outputs
+
+  # tags = merge(
+  #   data.null_data_source.asg-tagsv2.*.outputs,
+  #   {
+  #     "Name" = "${local.environment-name}-${var.project_name}-iapsv2-asg"
+  #   },
+  #   {
+  #   "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+  #   },
+  # )
 }
 
