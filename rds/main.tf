@@ -85,8 +85,8 @@ locals {
 # KMS KEY GENERATION - FOR ENCRYPTION
 ############################################
 module "kms_key" {
-  source              = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
-  kms_key_name        = local.common_name
+  source            = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
+  kms_key_name      = local.common_name
   tags = merge(
     local.tags,
     {
@@ -146,6 +146,36 @@ module "db_parameter_group" {
   )
 }
 
+resource "aws_db_parameter_group" "iaps_parameter_group" {
+  
+  name_prefix = "${local.common_name}-"
+  description = "Database parameter group for ${local.common_name}"
+  family      = local.family
+
+  dynamic "parameter" {
+      
+      for_each = var.parameters
+    
+      content {
+          name  = parameter.key
+          value = parameter.value
+      }
+  }
+
+  tags = merge(
+    local.tags,
+    {
+      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+    },
+  )
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+
+
 ############################################
 # CREATE DB OPTIONS
 ############################################
@@ -158,6 +188,33 @@ module "db_option_group" {
   engine_name              = local.engine
   major_engine_version     = local.major_engine_version
   options                  = var.options
+  tags = merge(
+    local.tags,
+    {
+      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+    },
+  )
+}
+
+resource "aws_db_option_group" "iaps_option_group" {
+  name_prefix              = "${local.common_name}-"
+  option_group_description = "${local.common_name} options group" == "" ? format("Option group for %s", local.common_name) : "${local.common_name} options group"
+  engine_name              = local.engine
+  major_engine_version     = local.major_engine_version
+ 
+  dynamic "option" {
+      for_each = var.options
+
+      content {
+        option_name = "${var.name_prefix}-${option.key}"
+
+        option_settings {
+          name  = option.key
+          value = option.value
+        }
+      }
+  }
+      
   tags = merge(
     local.tags,
     {
@@ -195,8 +252,8 @@ module "db_instance" {
   vpc_security_group_ids = local.security_group_ids
 
   db_subnet_group_name = module.db_subnet_group.db_subnet_group_id
-  parameter_group_name = module.db_parameter_group.db_parameter_group_id
-  option_group_name    = module.db_option_group.db_option_group_id
+  parameter_group_name = aws_db_parameter_group.iaps_parameter_group.name
+  option_group_name    = aws_db_option_group.iaps_option_group.name
   multi_az             = var.multi_az
   iops                 = var.iops
   publicly_accessible  = var.publicly_accessible

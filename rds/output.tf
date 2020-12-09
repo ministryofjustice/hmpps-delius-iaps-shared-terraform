@@ -27,20 +27,20 @@ output "rds_db_subnet_group_arn" {
 
 # PARAMETER GROUP
 output "rds_parameter_group_id" {
-  value = module.db_parameter_group.db_parameter_group_id
+  value = aws_db_parameter_group.iaps_parameter_group.id
 }
 
 output "rds_parameter_group_arn" {
-  value = module.db_parameter_group.db_parameter_group_arn
+  value = aws_db_parameter_group.iaps_parameter_group.arn
 }
 
 # DB OPTIONS GROUP
 output "rds_db_option_group_id" {
-  value = module.db_option_group.db_option_group_id
+  value = aws_db_option_group.iaps_option_group.id
 }
 
 output "rds_db_option_group_arn" {
-  value = module.db_option_group.db_option_group_arn
+  value = aws_db_option_group.iaps_option_group.arn
 }
 
 # DB INSTANCE
