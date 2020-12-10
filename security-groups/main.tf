@@ -50,8 +50,8 @@ locals {
     var.psn_proxy_cidrs,
   ]
 
-  bastion_cidr_block  = data.terraform_remote_state.common.outputs.bastion_vpc_public_cidr[0]
-  
+  bastion_cidr_block = data.terraform_remote_state.common.outputs.bastion_vpc_public_cidr[0]
+
   internal_inst_sg_id = data.terraform_remote_state.common.outputs.sg_map_ids["sg_iaps_api_in"]
   db_sg_id            = data.terraform_remote_state.common.outputs.sg_map_ids["sg_iaps_db_in"]
   external_lb_sg_id   = data.terraform_remote_state.common.outputs.sg_map_ids["sg_iaps_external_lb_in"]
@@ -81,16 +81,8 @@ resource "aws_security_group_rule" "internal_inst_sg_rdp" {
   from_port         = 3389
   to_port           = 3389
   protocol          = "tcp"
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibility in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  cidr_blocks = local.bastion_cidr_block
-  description = "${local.common_name}-remote-access-rdp"
+  cidr_blocks       = local.bastion_cidr_block
+  description       = "${local.common_name}-remote-access-rdp"
 }
 
 resource "aws_security_group_rule" "internal_inst_sg_egress_https" {

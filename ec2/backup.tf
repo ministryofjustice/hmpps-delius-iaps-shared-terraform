@@ -6,7 +6,7 @@ resource "aws_backup_vault" "iaps_backup_vault" {
       "Name" = "${var.environment_name}-${var.project_name}-iapsbkup-pri-vlt"
     },
     {
-    "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
     },
   )
 }
@@ -31,7 +31,7 @@ resource "aws_backup_plan" "iaps_backup_plan" {
       "Name" = "${var.environment_name}-${var.project_name}-iapsbkup-pri-pln"
     },
     {
-    "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
     },
   )
 }

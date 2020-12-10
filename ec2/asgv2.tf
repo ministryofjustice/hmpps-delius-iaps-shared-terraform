@@ -66,7 +66,7 @@ resource "aws_launch_template" "iapsv2" {
         "Name" = "${var.environment_name}-${var.project_name}-iapsv2-ec2"
       },
       {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+        "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
       },
     )
   }
@@ -79,7 +79,7 @@ resource "aws_launch_template" "iapsv2" {
         "Name" = "${var.environment_name}-${var.project_name}-iapsv2-ebs"
       },
       {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+        "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
       },
     )
   }
@@ -95,7 +95,7 @@ data "null_data_source" "asg-tagsv2" {
           "Name" = "${local.environment-name}-${var.project_name}-iapsv2-asg"
         },
         {
-        "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
+          "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
         },
       ),
     ),
@@ -138,14 +138,6 @@ data "null_data_source" "asg-tagsv2" {
 resource "aws_autoscaling_group" "iapsv2" {
   name = "${local.environment-name}-${local.application}-iapsv2-asg"
 
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibility in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
   vpc_zone_identifier = local.private_subnet_ids
 
   desired_capacity          = 1
