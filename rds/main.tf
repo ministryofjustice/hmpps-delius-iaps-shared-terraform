@@ -87,11 +87,7 @@ locals {
 module "kms_key" {
   source            = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
   kms_key_name      = local.common_name
-  tags = merge(
-    local.tags,
-    {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
-    },
+  tags              = local.tags
   )
   kms_policy_location = var.environment_type == "prod" ? "policies/kms-cross-account-policy.json" : "policies/kms-policy-${local.environment-name}.json"
 }
@@ -120,11 +116,7 @@ module "db_subnet_group" {
   identifier  = local.common_name
   name_prefix = "${local.common_name}-"
   subnet_ids  = local.db_subnet_ids
-  tags = merge(
-    local.tags,
-    {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
-    },
+  tags        = local.tags
   )
 }
 
@@ -138,11 +130,7 @@ module "db_parameter_group" {
   name_prefix = "${local.common_name}-"
   family      = local.family
   parameters  = var.parameters
-  tags = merge(
-    local.tags,
-    {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
-    },
+  tags        = local.tags
   )
 }
 
@@ -162,12 +150,7 @@ resource "aws_db_parameter_group" "iaps_parameter_group" {
       }
   }
 
-  tags = merge(
-    local.tags,
-    {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
-    },
-  )
+  tags = local.tags
 
   lifecycle {
     create_before_destroy = true
@@ -188,12 +171,6 @@ module "db_option_group" {
   engine_name              = local.engine
   major_engine_version     = local.major_engine_version
   options                  = var.options
-  tags = merge(
-    local.tags,
-    {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
-    },
-  )
 }
 
 resource "aws_db_option_group" "iaps_option_group" {
@@ -215,12 +192,7 @@ resource "aws_db_option_group" "iaps_option_group" {
       }
   }
       
-  tags = merge(
-    local.tags,
-    {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
-    },
-  )
+  tags = local.tags
 }
 
 ############################################
@@ -280,10 +252,7 @@ module "db_instance" {
     local.tags,
     {
       "Name" = "${upper(local.db_identity)}"
-    },
-    {
-      "source-code" = "https://github.com/ministryofjustice/hmpps-delius-iaps-shared-terraform"
-    },
+    }
   )
 
   enabled_cloudwatch_logs_exports = local.enabled_cloudwatch_logs_exports
