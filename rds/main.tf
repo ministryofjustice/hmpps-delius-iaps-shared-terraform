@@ -88,7 +88,6 @@ module "kms_key" {
   source            = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
   kms_key_name      = local.common_name
   tags              = local.tags
-  )
   kms_policy_location = var.environment_type == "prod" ? "policies/kms-cross-account-policy.json" : "policies/kms-policy-${local.environment-name}.json"
 }
 
@@ -117,7 +116,6 @@ module "db_subnet_group" {
   name_prefix = "${local.common_name}-"
   subnet_ids  = local.db_subnet_ids
   tags        = local.tags
-  )
 }
 
 ############################################
@@ -131,7 +129,6 @@ module "db_parameter_group" {
   family      = local.family
   parameters  = var.parameters
   tags        = local.tags
-  )
 }
 
 resource "aws_db_parameter_group" "iaps_parameter_group" {
@@ -171,6 +168,7 @@ module "db_option_group" {
   engine_name              = local.engine
   major_engine_version     = local.major_engine_version
   options                  = var.options
+  tags                      = local.tags
 }
 
 resource "aws_db_option_group" "iaps_option_group" {
