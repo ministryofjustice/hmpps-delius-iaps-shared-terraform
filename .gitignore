@@ -81,4 +81,4 @@ env_configs
 .DS_Store
 **plan_ret
 
-.code-workspace
+*.code-workspace
