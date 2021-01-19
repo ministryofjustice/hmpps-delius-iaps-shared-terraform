@@ -15,19 +15,6 @@ data "terraform_remote_state" "common" {
 }
 
 #-------------------------------------------------------------
-### Getting the s3 details
-#-------------------------------------------------------------
-#data "terraform_remote_state" "s3bucket" {
-#  backend = "s3"
-#
-#  bucket = var.remote_state_bucket_name
-#  config = {
-#    key    = "iaps/s3buckets/terraform.tfstate"
-#    region = var.region
-#  }
-#}
-
-#-------------------------------------------------------------
 ### Getting the IAM details
 #-------------------------------------------------------------
 data "terraform_remote_state" "iam" {

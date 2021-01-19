@@ -14,19 +14,6 @@ data "terraform_remote_state" "common" {
   }
 }
 
-#-------------------------------------------------------------
-### Getting the IAM details
-#-------------------------------------------------------------
-#data "terraform_remote_state" "s3bucket" {
-#  backend = "s3"
-#
-#  config = {
-#    key    = "iaps/s3buckets/terraform.tfstate"
-#    bucket = var.remote_state_bucket_name
-#    region = var.region
-#  }
-#}
-
 ####################################################
 # Locals
 ####################################################
@@ -53,20 +40,17 @@ data "template_file" "iam_policy_app_int" {
 }
 
 module "create-iam-app-role-int" {
-  #  source     = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//iam//role"
   source     = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//iam//role?ref=terraform-0.12"
   rolename   = "${local.common_name}-sim-ec2"
   policyfile = "ec2_policy.json"
 }
 
 module "create-iam-instance-profile-int" {
-  #source = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//iam//instance_profile"
   source = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//iam//instance_profile?ref=terraform-0.12"
   role   = module.create-iam-app-role-int.iamrole_name
 }
 
 module "create-iam-app-policy-int" {
-  #source     = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git?ref=pre-shared-vpc//modules//iam//rolepolicy"
   source     = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//iam//rolepolicy?ref=terraform-0.12"
   policyfile = data.template_file.iam_policy_app_int.rendered
   rolename   = module.create-iam-app-role-int.iamrole_name
