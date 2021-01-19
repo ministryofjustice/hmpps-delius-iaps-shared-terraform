@@ -1,9 +1,9 @@
 variable "environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "short_environment_name" {
-  type = "string"
+  type = string
 }
 
 variable "project_name" {
@@ -39,25 +39,26 @@ variable "dependencies_bucket_arn" {
 }
 
 variable "tags" {
-  type = "map"
+  type = map(string)
 }
 
 variable "ansible_vars" {
   default = {}
-  type    = "map"
+  type    = map(string)
 }
 
 variable "default_ansible_vars" {
   default = {}
-  type    = "map"
+  type    = map(string)
 }
 
 variable "dashboards_enabled" {
-  type        = "string"
+  type        = string
   description = "Enable IAPS Cloudwatch Dashboards in the environment"
   default     = "false"
 }
 
 variable "iaps_monitoring_rds_db_instance_identifier" {
-  type    = "string"
+  type = string
 }
+
