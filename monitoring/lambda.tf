@@ -12,5 +12,5 @@ resource "aws_lambda_permission" "sns_alarm" {
     action        = "lambda:InvokeFunction"
     function_name = aws_lambda_function.notify_slack_alarm.arn
     principal     = "sns.amazonaws.com"
-    source_arn    = data.aws_sns_topic.alarm_notification.arn
+    source_arn    = aws_sns_topic.iaps_alarm_notification.arn
 }

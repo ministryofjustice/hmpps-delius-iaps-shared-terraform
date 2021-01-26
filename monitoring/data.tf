@@ -5,7 +5,7 @@ data "template_file" "notify_slack_alarm_lambda_file" {
   template = file("${path.module}/templates/lambda/notify-slack-alarm.js")
   vars = {
     environment_name        = var.environment_name
-    channel                 = var.environment_name == "delius-prod" ? "delius-alerts-deliuscore-production" : "delius-alerts-deliuscore-nonprod"
+    channel                 = var.environment_name == "delius-prod" ? "delius-alerts-iaps-production" : "delius-alerts-iaps-nonprod"
     quiet_period_start_hour = local.quiet_period_start_hour
     quiet_period_end_hour   = local.quiet_period_end_hour
   }

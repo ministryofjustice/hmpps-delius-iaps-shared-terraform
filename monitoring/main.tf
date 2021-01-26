@@ -3,16 +3,16 @@
 ####################################################
 #-------------------------------------------------------------
 ### Getting the sns topic details
-#-------------------------------------------------------------
-data "terraform_remote_state" "sns" {
-  backend = "s3"
+# #-------------------------------------------------------------
+# data "terraform_remote_state" "sns" {
+#   backend = "s3"
 
-  config = {
-    bucket = var.remote_state_bucket_name
-    key    = "delius-core/monitoring/terraform.tfstate"
-    region = var.region
-  }
-}
+#   config = {
+#     bucket = var.remote_state_bucket_name
+#     key    = "delius-core/monitoring/terraform.tfstate"
+#     region = var.region
+#   }
+# }
 
 #-------------------------------------------------------------
 ### Getting the ec2 topic details

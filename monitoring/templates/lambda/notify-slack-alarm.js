@@ -29,10 +29,9 @@ exports.handler = function(event, context) {
     let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
         + "\n> Severity: " + severity.toUpperCase()
         + "\n> Environment: ${environment_name}"
-        + "\n> Description: *" + eventMessage.AlarmDescription + "*"
+        + "\n> Description: *IAPS - " + eventMessage.AlarmDescription + "*"
         + "\n<https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/" + eventMessage.AlarmName + "|View Details>";
-    // textMessage += "\n```" + JSON.stringify(eventMessage, null, "\t") + "```\n\n";
-
+    
     const req = https.request({
         method: "POST",
         hostname: "hooks.slack.com",
@@ -47,7 +46,7 @@ exports.handler = function(event, context) {
     });
     req.write(util.format("%j", {
         "channel": "# ${channel}",
-        "username": "Delius-Core Alarm Notification",
+        "username": "IAPS Alarm Notification",
         "text": textMessage,
         "icon_emoji": ":amazon:",
         "link_names": "1"

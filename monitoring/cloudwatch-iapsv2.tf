@@ -14,9 +14,9 @@ resource "aws_cloudwatch_metric_alarm" "iapsv2_asg_CPUUtilization_warning" {
   period                    = "120"
   statistic                 = "Average"
   threshold                 = "60"
-  alarm_actions             = [data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_arn]
-  ok_actions                = [data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_arn]
-  alarm_description         = "This metric monitors ec2 cpu utilization for warning usage"
+  alarm_actions             = [aws_sns_topic.iaps_alarm_notification.arn]
+  ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
+  alarm_description         = "ec2 cpu utilization for the IAPS v2 ASG is greater than 60%"
   insufficient_data_actions = []
 
   dimensions = {
@@ -33,9 +33,9 @@ resource "aws_cloudwatch_metric_alarm" "iapsv2_asg_CPUUtilization_critical" {
   period                    = "120"
   statistic                 = "Average"
   threshold                 = "80"
-  alarm_actions             = [data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_arn]
-  ok_actions                = [data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_arn]
-  alarm_description         = "This metric monitors ec2 cpu utilization for critical usage"
+  alarm_actions             = [aws_sns_topic.iaps_alarm_notification.arn]
+  ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
+  alarm_description         = "ec2 cpu utilization for the IAPS v2 ASG is greater than 80%"
   insufficient_data_actions = []
 
   dimensions = {
@@ -52,9 +52,9 @@ resource "aws_cloudwatch_metric_alarm" "iapsv2_asg_StatusCheckFailed" {
   period                    = "300"
   statistic                 = "Average"
   threshold                 = "1"
-  alarm_actions             = [data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_arn]
-  ok_actions                = [data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_arn]
-  alarm_description         = "This metric monitors ec2 StatusCheckFailed"
+  alarm_actions             = [aws_sns_topic.iaps_alarm_notification.arn]
+  ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
+  alarm_description         = "ec2 StatusCheckFailed for one or more instances in the IAPS v2 ASG"
   insufficient_data_actions = []
 
   dimensions = {
@@ -71,9 +71,9 @@ resource "aws_cloudwatch_metric_alarm" "iapsv2_asg_GroupInServiceInstances" {
   period                    = "300"
   statistic                 = "Average"
   threshold                 = "1"
-  alarm_actions             = [data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_arn]
-  ok_actions                = [data.terraform_remote_state.sns.outputs.aws_sns_topic_alarm_notification_arn]
-  alarm_description         = "This metric monitors ec2 GroupInServiceInstances"
+  alarm_actions             = [aws_sns_topic.iaps_alarm_notification.arn]
+  ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
+  alarm_description         = "There is less than 1 instance InService for ec2 IAPS ASG"
   insufficient_data_actions = []
 
   dimensions = {
