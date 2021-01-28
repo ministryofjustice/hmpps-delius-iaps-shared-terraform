@@ -17,6 +17,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_asg_CPUUtilization_warning" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "ec2 cpu utilization for the IAPS ASG is greater than 60%"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     AutoScalingGroupName = data.terraform_remote_state.ec2.outputs.iaps_asg["name"]
@@ -36,6 +37,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_asg_CPUUtilization_critical" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "ec2 cpu utilization for the IAPS ASG is greater than 80%"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     AutoScalingGroupName = data.terraform_remote_state.ec2.outputs.iaps_asg["name"]
@@ -55,6 +57,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_asg_StatusCheckFailed" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "ec2 StatusCheckFailed for one or more instances in the IAPS ASG"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     AutoScalingGroupName = data.terraform_remote_state.ec2.outputs.iaps_asg["name"]
@@ -74,6 +77,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_asg_GroupInServiceInstances" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "There is less than 1 instance InService for ec2 IAPS ASG"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     AutoScalingGroupName = data.terraform_remote_state.ec2.outputs.iaps_asg["name"]

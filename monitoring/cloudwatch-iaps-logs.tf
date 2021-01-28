@@ -31,6 +31,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_cloudwatch_agent_log_warning" {
   alarm_description         = "No cloudwatch agent logs for 5 minutes"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "iaps_cloudwatch_agent_log_critical" {
@@ -47,6 +48,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_cloudwatch_agent_log_critical" {
   alarm_description         = "No cloudwatch agent logs for 15 minutes"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }
 
 #--------------------------------------------------------------------------------------------------
@@ -80,6 +82,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_config_backup_log_critical" {
   alarm_description         = "No Config backup logs for today"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }
 
 #--------------------------------------------------------------------------------------------------
@@ -113,6 +116,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_nginx_error_log_warning" {
   alarm_description         = "nginx on localhost is reporting a warning number of errors in error.log"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "iaps_nginx_error_log_critical" {
@@ -129,6 +133,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_nginx_error_log_critical" {
   alarm_description         = "nginx on localhost is reporting a critical number of errors error.log"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }
 
 
@@ -163,6 +168,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_xmltransfer_error_log_warning" {
   alarm_description         = "NDelius Interface is reporting a warning number of errors in i2n-xmltransfer.log"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "iaps_xmltransfer_error_log_critical" {
@@ -179,6 +185,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_xmltransfer_error_log_critical" {
   alarm_description         = "NDelius Interface is reporting a critical number of errors i2n-xmltransfer.log"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }
 
 #--------------------------------------------------------------------------------------------------------------
@@ -212,6 +219,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_imiapsif_error_log_warning" {
   alarm_description         = "i2n logs for IM Interface is reporting a warning number of errors in imiapsif.log"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }
 
 resource "aws_cloudwatch_metric_alarm" "iaps_imiapsif_error_log_critical" {
@@ -228,4 +236,5 @@ resource "aws_cloudwatch_metric_alarm" "iaps_imiapsif_error_log_critical" {
   alarm_description         = "i2n logs for IM Interface is reporting a critical number of errors imiapsif.log"
   treat_missing_data        = "notBreaching"
   insufficient_data_actions = []
+  tags                      = local.tags
 }

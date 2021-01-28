@@ -18,6 +18,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_rds_CPUUtilization_warning" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "rds database cpu utilization is greater than 60%"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     DBInstanceIdentifier = var.iaps_monitoring_rds_db_instance_identifier != "" ? var.iaps_monitoring_rds_db_instance_identifier : data.terraform_remote_state.rds.outputs.rds_db_instance_id
@@ -37,6 +38,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_rds_CPUUtilization_critical" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "rds database cpu utilization is greater than 90%"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     DBInstanceIdentifier = var.iaps_monitoring_rds_db_instance_identifier != "" ? var.iaps_monitoring_rds_db_instance_identifier : data.terraform_remote_state.rds.outputs.rds_db_instance_id
@@ -56,6 +58,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_rds_FreeStorageSpace_warning" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "rds database FreeStorageSpace is less than 20GB"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     DBInstanceIdentifier = var.iaps_monitoring_rds_db_instance_identifier != "" ? var.iaps_monitoring_rds_db_instance_identifier : data.terraform_remote_state.rds.outputs.rds_db_instance_id
@@ -75,6 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_rds_FreeStorageSpace_critical" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "rds database FreeStorageSpace is less than 10GB"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     DBInstanceIdentifier = var.iaps_monitoring_rds_db_instance_identifier != "" ? var.iaps_monitoring_rds_db_instance_identifier : data.terraform_remote_state.rds.outputs.rds_db_instance_id
@@ -94,6 +98,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_rds_ReadLatency_warning" {
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "rds database ReadLatency is greater than 1 second"
   insufficient_data_actions = []
+  tags                      = local.tags
 
   dimensions = {
     DBInstanceIdentifier = var.iaps_monitoring_rds_db_instance_identifier != "" ? var.iaps_monitoring_rds_db_instance_identifier : data.terraform_remote_state.rds.outputs.rds_db_instance_id
