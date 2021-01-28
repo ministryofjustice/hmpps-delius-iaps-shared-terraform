@@ -4,7 +4,7 @@ locals {
   lambda_alarm_enabled       = true
   lambda_alarm_slack_channel = var.environment_name == "delius-prod" ? "delius-alerts-iaps-production" : "delius-alerts-iaps-nonprod"
   quiet_period_start_hour    = "0"
-  quiet_period_end_hour      = "3"
+  quiet_period_end_hour      = "6"
 
   # metrics  
   iaps_nginx_error_log_sum_metric_name      = "NginxErrorLogEventSum"
