@@ -80,11 +80,6 @@ variable "snapshot_identifier" {
   default     = ""
 }
 
-variable "multi_az" {
-  description = "Specifies if the RDS instance is multi-AZ"
-  default     = false
-}
-
 variable "iops" {
   description = "The amount of provisioned IOPS. Setting this implies a storage_type of 'io1'"
   default     = 0
