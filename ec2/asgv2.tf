@@ -65,6 +65,9 @@ resource "aws_launch_template" "iapsv2" {
       {
         "Name" = "${var.environment_name}-${var.project_name}-iapsv2-ec2"
       },
+      {
+        "image_tag_version" = var.iaps_asgv2_props["image_tag_version"]
+      },
     )
   }
 
@@ -74,6 +77,9 @@ resource "aws_launch_template" "iapsv2" {
       local.tags,
       {
         "Name" = "${var.environment_name}-${var.project_name}-iapsv2-ebs"
+      },
+      {
+        "image_tag_version" = var.iaps_asgv2_props["image_tag_version"]
       },
     )
   }
