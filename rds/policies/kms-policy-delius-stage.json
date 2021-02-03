@@ -19,6 +19,7 @@
             "Effect": "Allow",
             "Principal": {
                 "AWS": [
+                    "arn:aws:iam::010587221707:root",
                     "arn:aws:iam::${accountID}:role/terraform",
                     "arn:aws:iam::${accountID}:role/del-stage-server-provison-ec2-role"
                 ]

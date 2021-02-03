@@ -85,7 +85,7 @@ locals {
 # KMS KEY GENERATION - FOR ENCRYPTION
 ############################################
 module "kms_key" {
-  source            = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
+  source            = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//kms?ref=terraform-0.12"
   kms_key_name      = local.common_name
   tags              = local.tags
   kms_policy_location = var.environment_type == "prod" ? "policies/kms-cross-account-policy.json" : "policies/kms-policy-${local.environment-name}.json"
@@ -96,7 +96,7 @@ module "kms_key" {
 #-------------------------------------------------------------
 
 module "rds_monitoring_role" {
-  source     = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//iam//role?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
+  source     = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//iam//role?ref=terraform-0.12"
   rolename   = "${local.common_name}-monitoring"
   policyfile = "rds_monitoring.json"
 }
@@ -110,7 +110,7 @@ resource "aws_iam_role_policy_attachment" "enhanced_monitoring" {
 # CREATE DB SUBNET GROUP
 ############################################
 module "db_subnet_group" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//rds//db_subnet_group?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
+  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//rds//db_subnet_group?ref=terraform-0.12"
   create      = true
   identifier  = local.common_name
   name_prefix = "${local.common_name}-"
@@ -122,7 +122,7 @@ module "db_subnet_group" {
 # CREATE PARAMETER GROUP
 ############################################
 module "db_parameter_group" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//rds//db_parameter_group?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
+  source      = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//rds//db_parameter_group?ref=terraform-0.12"
   create      = true
   identifier  = local.common_name
   name_prefix = "${local.common_name}-"
@@ -154,13 +154,11 @@ resource "aws_db_parameter_group" "iaps_parameter_group" {
   }
 }
 
-
-
 ############################################
 # CREATE DB OPTIONS
 ############################################
 module "db_option_group" {
-  source                   = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//rds//db_option_group?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
+  source                   = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//rds//db_option_group?ref=terraform-0.12"
   create                   = true
   identifier               = local.common_name
   name_prefix              = "${local.common_name}-"
@@ -197,7 +195,7 @@ resource "aws_db_option_group" "iaps_option_group" {
 # CREATE DB INSTANCE
 ############################################
 module "db_instance" {
-  source            = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//rds//db_instance?ref=issues/213/ALS-2335-terraform_11_14_update-mis-2"
+  source            = "git::https://github.com/ministryofjustice/hmpps-terraform-modules.git//modules//rds//db_instance?ref=terraform-0.12"
   create            = true
   identifier        = local.common_name
   engine            = local.engine
@@ -224,7 +222,7 @@ module "db_instance" {
   db_subnet_group_name = module.db_subnet_group.db_subnet_group_id
   parameter_group_name = aws_db_parameter_group.iaps_parameter_group.name
   option_group_name    = aws_db_option_group.iaps_option_group.name
-  multi_az             = var.multi_az
+  multi_az             = true
   iops                 = var.iops
   publicly_accessible  = var.publicly_accessible
 
