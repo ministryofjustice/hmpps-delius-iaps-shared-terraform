@@ -18,7 +18,7 @@ resource "null_resource" "iaps_aws_launch_template_userdata_rendered" {
 }
 
 resource "aws_launch_template" "iaps" {
-  name = var.iaps_asg_props["launch_template_name"]
+  name = var.environment_name == "delius-core-dev" ?  "${var.environment_name}-${var.project_name}-iaps-lt" : var.iaps_asg_props["launch_template_name"]
 
   # name_prefix = "${local.environment-name}-${local.application}-iaps-pri-tpl"
   description = "Windows IAPS Server Launch Template"
@@ -144,7 +144,7 @@ resource "aws_autoscaling_group" "iaps" {
   health_check_type         = "EC2"
 
   launch_template {
-    id      = var.iaps_asg_props["launch_template_id"]
+    id      = var.environment_name == "delius-core-dev" ? aws_launch_template.iaps.id :var.iaps_asg_props["launch_template_id"]
     version = "$Latest"
   }
 
