@@ -8,20 +8,25 @@
 
 Plan Stage
 
+Note: 
+These code examples use the 'tf' alias - see https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2599420295/AWS+IAM+hmpps-security-access-terraform+environment+config for details on creating this alias.
+
 ```bash
-AWS_PROFILE=hmpps_token ENVIRONMENT=delius-stage COMPONENT=common ./run.sh plan
+AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=common tg plan
 
-AWS_PROFILE=hmpps_token ENVIRONMENT=delius-stage COMPONENT=iam ./run.sh plan
+AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=common tg plan
 
-AWS_PROFILE=hmpps_token ENVIRONMENT=delius-stage COMPONENT=security-groups ./run.sh plan
+AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=iam tg plan
 
-AWS_PROFILE=hmpps_token ENVIRONMENT=delius-stage COMPONENT=rds ./run.sh plan
+AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=security-groups tg plan
 
-AWS_PROFILE=hmpps_token ENVIRONMENT=delius-stage COMPONENT=ec2 ./run.sh plan
+AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=rds tg plan
 
-AWS_PROFILE=hmpps_token ENVIRONMENT=delius-stage COMPONENT=monitoring ./run.sh plan
+AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=ec2 tg plan
 
-AWS_PROFILE=hmpps_token ENVIRONMENT=delius-stage COMPONENT=dashboards ./run.sh plan
+AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=monitoring tg plan
+
+AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=dashboards tg plan
 
 ```
 
