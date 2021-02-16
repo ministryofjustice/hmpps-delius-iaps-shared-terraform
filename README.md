@@ -11,6 +11,8 @@ Plan Stage
 Note: 
 These code examples use the 'tf' alias - see https://dsdmoj.atlassian.net/wiki/spaces/DAM/pages/2599420295/AWS+IAM+hmpps-security-access-terraform+environment+config for details on creating this alias.
 
+or https://github.com/ministryofjustice/hmpps-delius-pipelines#applying-changes
+
 ```bash
 AWS_PROFILE=hmpps_token ENVIRONMENT=delius-core-dev COMPONENT=common tg plan
 
