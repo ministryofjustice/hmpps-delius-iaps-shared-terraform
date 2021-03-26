@@ -152,3 +152,7 @@ variable "environment_type" {
   description = "The environment type - e.g. dev"
 }
 
+variable "multi_az" {
+  type    = bool
+  default = true
+}
