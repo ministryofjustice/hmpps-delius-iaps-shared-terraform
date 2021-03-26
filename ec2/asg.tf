@@ -1,4 +1,7 @@
 data "template_file" "instance_userdata" {
+
+  # count = var.deploy_iaps_v1 == false ? 0 : 1
+
   template = file("../userdata/userdata.tpl")
 
   vars = {
@@ -12,12 +15,16 @@ data "template_file" "instance_userdata" {
 }
 
 resource "null_resource" "iaps_aws_launch_template_userdata_rendered" {
+  count = var.deploy_iaps_v1 == false ? 0 : 1
   triggers = {
     json = data.template_file.instance_userdata.rendered
   }
 }
 
 resource "aws_launch_template" "iaps" {
+
+  count = var.deploy_iaps_v1 == false ? 0 : 1
+
   name = var.environment_name == "delius-core-dev" ?  "${var.environment_name}-${var.project_name}-iaps-lt" : var.iaps_asg_props["launch_template_name"]
 
   # name_prefix = "${local.environment-name}-${local.application}-iaps-pri-tpl"
@@ -133,6 +140,9 @@ data "null_data_source" "asg-tags" {
 
 # v1 ASG which uses AMI created by John Barber
 resource "aws_autoscaling_group" "iaps" {
+
+  count = var.deploy_iaps_v1 == false ? 0 : 1
+
   name = "${local.environment-name}-${local.application}-iaps-asg"
 
   vpc_zone_identifier = local.private_subnet_ids
@@ -144,7 +154,7 @@ resource "aws_autoscaling_group" "iaps" {
   health_check_type         = "EC2"
 
   launch_template {
-    id      = var.environment_name == "delius-core-dev" ? aws_launch_template.iaps.id :var.iaps_asg_props["launch_template_id"]
+    id      = var.iaps_asg_props["launch_template_id"]
     version = "$Latest"
   }
 

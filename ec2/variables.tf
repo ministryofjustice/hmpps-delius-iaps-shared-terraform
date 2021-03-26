@@ -57,3 +57,6 @@ variable "iaps_asg_suspended_processes" {
   type = list(string)
 }
 
+variable "deploy_iaps_v1" {
+  type = bool
+}
