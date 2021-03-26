@@ -62,3 +62,6 @@ variable "iaps_monitoring_rds_db_instance_identifier" {
   type = string
 }
 
+variable "deploy_iaps_v1" {
+  type = bool
+}

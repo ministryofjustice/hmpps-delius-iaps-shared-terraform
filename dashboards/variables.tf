@@ -58,3 +58,6 @@ variable "dashboards_enabled" {
   default     = "false"
 }
 
+variable "deploy_iaps_v1" {
+  type = bool
+}

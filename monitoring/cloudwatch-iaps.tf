@@ -5,6 +5,7 @@
 # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-cloudwatch.html
 #===========================================================================
 resource "aws_cloudwatch_metric_alarm" "iaps_asg_CPUUtilization_warning" {
+  count = var.deploy_iaps_v1 == false ? 0 : 1
   alarm_name                = "${var.environment_name}-iaps-asg-CPUUtilization-cwa--warning"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "2"
@@ -25,6 +26,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_asg_CPUUtilization_warning" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "iaps_asg_CPUUtilization_critical" {
+  count = var.deploy_iaps_v1 == false ? 0 : 1
   alarm_name                = "${var.environment_name}-iaps-asg-CPUUtilization-cwa--critical"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "2"
@@ -45,6 +47,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_asg_CPUUtilization_critical" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "iaps_asg_StatusCheckFailed" {
+  count = var.deploy_iaps_v1 == false ? 0 : 1
   alarm_name                = "${var.environment_name}-iaps-asg-StatusCheckFailed--critical"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   evaluation_periods        = "1"
@@ -65,6 +68,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_asg_StatusCheckFailed" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "iaps_asg_GroupInServiceInstances" {
+  count = var.deploy_iaps_v1 == false ? 0 : 1
   alarm_name                = "${var.environment_name}-iaps-asg-GroupInServiceInstances--critical"
   comparison_operator       = "LessThanThreshold"
   evaluation_periods        = "1"
