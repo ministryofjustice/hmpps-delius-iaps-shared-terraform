@@ -79,6 +79,8 @@ locals {
 
   enabled_cloudwatch_logs_exports = ["alert", "audit", "listener", "trace"]
 
+  multi_az = var.multi_az
+
 }
 
 ############################################
@@ -222,7 +224,7 @@ module "db_instance" {
   db_subnet_group_name = module.db_subnet_group.db_subnet_group_id
   parameter_group_name = aws_db_parameter_group.iaps_parameter_group.name
   option_group_name    = aws_db_option_group.iaps_option_group.name
-  multi_az             = true
+  multi_az             = local.multi_az 
   iops                 = var.iops
   publicly_accessible  = var.publicly_accessible
 

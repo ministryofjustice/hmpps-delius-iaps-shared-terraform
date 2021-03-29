@@ -33,7 +33,8 @@
 # }
 
 # resource "aws_backup_selection" "iaps_backup_selection" {
-#   count = var.deploy_iaps_v1 == false ? 0 : 1iam_role_arn = local.backup_ebs_role_arn
+#   count        = var.deploy_iaps_v1 == false ? 0 : 1
+#   iam_role_arn = local.backup_ebs_role_arn
 #   name         = "${var.environment_name}-${var.project_name}-iapsabkup-pri-sel"
 #   plan_id      = aws_backup_plan.iaps_backup_plan.id
 
@@ -43,4 +44,3 @@
 #     value = "${var.environment_name}-${var.project_name}-iaps-ebs"
 #   }
 # }
-
