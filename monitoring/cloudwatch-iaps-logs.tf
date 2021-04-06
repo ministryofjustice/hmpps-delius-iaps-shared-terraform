@@ -205,8 +205,8 @@ resource "aws_cloudwatch_metric_alarm" "iaps_xmltransfer_no_log_warning" {
   count                     = var.environment_name == "delius-core-dev" ? 0 :1
   alarm_name                = "${var.environment_name}-iaps-xmltransfer_no_log--warning"
   comparison_operator       = "LessThanThreshold"
-  period                    = "60"
-  evaluation_periods        = "1"
+  period                    = "120"
+  evaluation_periods        = "3"
   metric_name               = local.iaps_xmltransfer_log_sum_total_metric_name
   namespace                 = "IAPS"
   statistic                 = "Sum"
@@ -223,7 +223,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_xmltransfer_no_log_critical" {
   count                     = var.environment_name == "delius-core-dev" ? 0 :1
   alarm_name                = "${var.environment_name}-iaps-xmltransfer_no_log--critical"
   comparison_operator       = "LessThanThreshold"
-  period                    = "60"
+  period                    = "120"
   evaluation_periods        = "5"
   metric_name               = local.iaps_xmltransfer_log_sum_total_metric_name
   namespace                 = "IAPS"
@@ -275,11 +275,11 @@ resource "aws_cloudwatch_metric_alarm" "iaps_imiapsif_error_log_critical" {
   alarm_name                = "${var.environment_name}-iaps-imiapsif_error_log--critical"
   comparison_operator       = "GreaterThanOrEqualToThreshold"
   period                    = "60"
-  evaluation_periods        = "1"
+  evaluation_periods        = "3"
   metric_name               = local.iaps_imiapsif_log_sum_metric_name
   namespace                 = "IAPS"
   statistic                 = "Sum"
-  threshold                 = "3"
+  threshold                 = "1"
   alarm_actions             = [aws_sns_topic.iaps_alarm_notification.arn]
   ok_actions                = [aws_sns_topic.iaps_alarm_notification.arn]
   alarm_description         = "i2n logs for IM Interface is reporting a critical number of errors imiapsif.log"
@@ -305,8 +305,8 @@ resource "aws_cloudwatch_metric_alarm" "iaps_imiapsif_no_log_warning" {
   count                     = var.environment_name == "delius-core-dev" ? 0 :1
   alarm_name                = "${var.environment_name}-iaps-imiapsif_no_log--warning"
   comparison_operator       = "LessThanThreshold"
-  period                    = "60"
-  evaluation_periods        = "1"
+  period                    = "120"
+  evaluation_periods        = "3"
   metric_name               = local.iaps_imiapsif_log_sum_total_metric_name
   namespace                 = "IAPS"
   statistic                 = "Sum"
@@ -323,7 +323,7 @@ resource "aws_cloudwatch_metric_alarm" "iaps_imiapsif_no_log_critical" {
   count                     = var.environment_name == "delius-core-dev" ? 0 :1
   alarm_name                = "${var.environment_name}-iaps-imiapsif_no_log--critical"
   comparison_operator       = "LessThanThreshold"
-  period                    = "60"
+  period                    = "120"
   evaluation_periods        = "5"
   metric_name               = local.iaps_imiapsif_log_sum_total_metric_name
   namespace                 = "IAPS"
