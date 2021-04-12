@@ -66,8 +66,6 @@ variable "deploy_iaps_v1" {
   type = bool
 }
 
-
 variable "account_ids" {
-  default = {}
-  type    = map(string)
+  type = map(string)
 }

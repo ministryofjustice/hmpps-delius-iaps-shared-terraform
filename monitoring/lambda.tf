@@ -62,9 +62,9 @@ data "template_file" "iaps_lambda_exec_role" {
     "${path.module}/policies/alarm_lambda.tpl",
   )
 
-  #vars = {
-  #  account_number = lookup(local.account_ids, local.environment_name, "")
-  #}
+  vars = {
+    account_number = lookup(local.account_ids, local.environment_name, "")
+  }
 }
 
 resource "aws_iam_policy" "iaps_lambda_exec_role" {
