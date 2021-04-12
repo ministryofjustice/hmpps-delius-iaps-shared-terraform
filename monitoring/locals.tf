@@ -26,7 +26,12 @@ locals {
   tags = var.tags
 
   environment_name = var.environment_name
-  account_ids = var.account_ids
+  
+  iaps_account_ids = {
+    delius-core-dev = "723123699647"
+    delius-stage    = "205048117103"
+    delius-prod     = "050243167760"
+  }
 
   # Slack alarms
   slack_nonprod_url     = "/services/T02DYEB3A/BS16X2JGY/r9e1CJYez7BDmwyliIl7WzLf"

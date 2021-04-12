@@ -65,7 +65,3 @@ variable "iaps_monitoring_rds_db_instance_identifier" {
 variable "deploy_iaps_v1" {
   type = bool
 }
-
-variable "account_ids" {
-  type = map(string)
-}
