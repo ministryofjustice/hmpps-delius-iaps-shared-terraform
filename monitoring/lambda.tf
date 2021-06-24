@@ -25,10 +25,58 @@ resource "aws_lambda_function" "notify_slack_alarm" {
     tags             = local.tags
 }
 
+resource "null_resource" "iaps_notify_slack_alarm_rendered" {
+  triggers = {
+    json = data.template_file.notify_slack_alarm_lambda_file.rendered
+  }
+}
+
 resource "aws_lambda_permission" "sns_alarm" {
     statement_id  = "AllowExecutionFromSNS"
     action        = "lambda:InvokeFunction"
     function_name = aws_lambda_function.notify_slack_alarm.arn
     principal     = "sns.amazonaws.com"
     source_arn    = aws_sns_topic.iaps_alarm_notification.arn
+}
+
+
+data "aws_iam_policy_document" "lambda_assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "iaps_lambda_exec_role" {
+  name               = "iaps_lambda_exec_role"
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+}
+
+data "template_file" "iaps_lambda_exec_role" {
+  template = file(
+    "${path.module}/policies/alarm_lambda.tpl",
+  )
+
+  vars = {
+    account_number = lookup(local.iaps_account_ids, local.environment_name, "")
+  }
+
+
+}
+
+resource "aws_iam_policy" "iaps_lambda_exec_role" {
+  name        = "iaps_lambda_exec_role_policy"
+  path        = "/"
+  description = "iaps_lambda_exec_role policy"
+  policy      = data.template_file.iaps_lambda_exec_role.rendered
+}
+
+resource "aws_iam_role_policy_attachment" "iaps_lambda_exec_role" {
+  role       = aws_iam_role.iaps_lambda_exec_role.name
+  policy_arn = aws_iam_policy.iaps_lambda_exec_role.arn
 }

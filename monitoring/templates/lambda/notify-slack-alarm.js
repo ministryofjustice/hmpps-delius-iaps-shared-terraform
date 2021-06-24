@@ -1,7 +1,15 @@
-let https = require("https");
-let util = require("util");
+var https = require('https');
+var util = require('util');
 
-exports.handler = function (event, context) {
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+exports.handler = function(event, context) {
     console.log(JSON.stringify(event, null, 2));
 
     const now = new Date(new Date().toLocaleString([], {timeZone: "Europe/London"})).getHours();
@@ -13,48 +21,98 @@ exports.handler = function (event, context) {
     console.log("Alarms enabled:", process.env.ENABLED, ". Current hour:", now);
     if (process.env.ENABLED !== "true" || inQuietPeriod) { console.log("Dismissing notification."); return }
 
-    const eventMessage = JSON.parse(event.Records[0].Sns.Message);
-    let severity = eventMessage.AlarmName.split("--")[1];    // could we use tags for this??
-    if (eventMessage.NewStateValue === "OK") severity = "ok";
+var eventMessage = JSON.parse(event.Records[0].Sns.Message);
+var alarmName = eventMessage.AlarmName;
+var alarmDescription = eventMessage.AlarmDescription;
+var newStateValue = eventMessage.NewStateValue;
 
-    if (eventMessage.NewStateValue === "INSUFFICIENT_DATA"
-        || (eventMessage.NewStateValue === "OK" && eventMessage.OldStateValue === "INSUFFICIENT_DATA")) {
-        console.log("Ignoring 'INSUFFICIENT_DATA' notification");
-        return;
+var environment = '${environment_name}';
+var metric = alarmName.split("--")[0];
+var severity = alarmName.split("--")[1];
+var channel="${slack_channel}";
+var url_path = "${slack_url}";
+var icon_emoji=":twisted_rightwards_arrows:";
+
+switch(severity) {
+    case 'alert':
+        icon_emoji = ":warning:";
+        break;
+    case 'critical':
+        icon_emoji = ":alert:";
+        break;
+    case 'severe':
+        icon_emoji = ":x:";
+        break;
+    case 'OK':
+        icon_emoji = ":white_check_mark:";
+        newStateValue='OK';
+        sleep(2000);
+        break;
+    default:
+        break;
     }
 
-    let icon_emoji = ":question:";
-    if (severity === "ok")       icon_emoji = ":yep:";
-    if (severity === "warning")  icon_emoji = ":warning:";
-    if (severity === "critical") icon_emoji = ":siren:";
-    if (severity === "fatal")    icon_emoji = ":alert:";
+if (newStateValue=='OK' )
+    icon_emoji = ":white_check_mark:";
 
-    let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
-        + "\n> Severity: " + severity.toUpperCase()
-        + "\n> Environment: ${environment_name}"
-        + "\n> Description: *IAPS - " + eventMessage.AlarmDescription + "*"
-        + "\n  <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/"   + eventMessage.AlarmName + "|View Alarm Details>" 
-        + " <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#logsV2:log-groups" + "| View Cloudwatch Logs>";
-    console.log(textMessage);
-    
-        const req = https.request({
-        method: "POST",
-        hostname: "hooks.slack.com",
+if (newStateValue === "INSUFFICIENT_DATA" || (newStateValue === "OK" && eventMessage.OldStateValue === "INSUFFICIENT_DATA")) {
+    console.log("Ignoring 'INSUFFICIENT_DATA' notification");
+    return;
+}
+
+let textMessage = icon_emoji + " " + (severity === "ok"? "*RESOLVED*": "*ALARM*")
+    + "\n> Severity: " + severity
+    + "\n> Environment: " + environment
+    + "\n> Description: *IAPS - " + eventMessage.AlarmDescription + "*"
+    + "\n  <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#alarmsV2:alarm/"   + eventMessage.AlarmName + "|View Alarm Details>" 
+    + " <https://eu-west-2.console.aws.amazon.com/cloudwatch/home?region=eu-west-2#logsV2:log-groups" + "| View Cloudwatch Logs>";
+console.log(textMessage);
+
+ //environment	service	    tier	metric	severity	resolvergroup(s)
+console.log("Slack channel: " + channel);
+
+if (newStateValue=='ALARM' )
+    var postData = {
+            "channel": "# " + channel,
+            "username": "AWS SNS via Lambda :: Alarm Notification",
+            "text": "**************************************************************************************************"
+            + "\n\nInfo: " + alarmDescription
+            + "\nAlarmState: " + newStateValue
+            +"\nMetric: " + metric
+            + "\nSeverity: " + severity.toUpperCase()
+            + "\nEnvironment: " + environment
+            ,
+            "icon_emoji": icon_emoji,
+            "link_names": "1"
+        };
+
+if (newStateValue=='OK' )
+    var postData = {
+            "channel": "# " + channel,
+            "username": "AWS SNS via Lambda :: OK Notification",
+            "text": textMessage,
+            "icon_emoji": icon_emoji,
+            "link_names": "1"
+        };
+
+    var options = {
+        method: 'POST',
+        hostname: 'hooks.slack.com',
         port: 443,
-        path: "/services/T02DYEB3A/BGJ1P95C3/f1MBtQ0GoI6kbGUztiSpkOut"
-    }, function (res) {
-        res.setEncoding("utf8");
-        res.on("data", function (chunk) { return context.done(null) });
+        path: url_path
+    };
+
+    var req = https.request(options, function(res) {
+      res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+        context.done(null);
+      });
     });
-    req.on("error", function (e) {
-        return console.log("problem with request: " + e.message);
+
+    req.on('error', function(e) {
+      console.log('problem with request: ' + e.message);
     });
-    req.write(util.format("%j", {
-        "channel": "# " + process.env.SLACK_CHANNEL,
-        "username": "IAPS Alarm Notification",
-        "text": textMessage,
-        "icon_emoji": ":amazon:",
-        "link_names": "1"
-    }));
+
+    req.write(util.format("%j", postData));
     req.end();
 };

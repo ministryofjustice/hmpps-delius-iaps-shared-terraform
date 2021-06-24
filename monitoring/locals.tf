@@ -7,11 +7,35 @@ locals {
   quiet_period_end_hour      = "6"
 
   # metrics  
-  iaps_nginx_error_log_sum_metric_name      = "NginxErrorLogEventSum"
-  iaps_xmltransfer_log_sum_metric_name      = "XMLTransferErrorLogEventSum"
-  iaps_imiapsif_log_sum_metric_name         = "IMIAPSIFErrorLogEventSum"
-  iaps_cloudwatch_agent_log_sum_metric_name = "CloudwatchAgentErrorLogEventSum"
-  iaps_config_backup_log_sum_metric_name    = "ConfigBackupLogEventSum"
+  iaps_nginx_error_log_sum_metric_name       = "IAPSNginxErrorLogEventSum"
+  
+  #nDelius Interface Log
+  iaps_xmltransfer_log_sum_metric_name       = "IAPSXMLTransferErrorLogEventSum"
+  iaps_xmltransfer_log_sum_total_metric_name = "IAPSXMLTransferTotalLogEventSum"
+  
+  #IM Interface Log
+  iaps_imiapsif_log_sum_metric_name          = "IAPSIMIAPSIFErrorLogEventSum"
+  iaps_imiapsif_log_sum_total_metric_name    = "IAPSIMIAPSIFTotalLogEventSum"
+  
+  # Cloudwatch agent log
+  iaps_cloudwatch_agent_log_sum_metric_name  = "IAPSCloudwatchAgentErrorLogEventSum"
+  
+  #Daily IM Config backup Log
+  iaps_config_backup_log_sum_metric_name     = "IAPSConfigBackupLogEventSum"
 
   tags = var.tags
+
+  environment_name = var.environment_name
+  
+  iaps_account_ids = {
+    delius-core-dev = "723123699647"
+    delius-stage    = "205048117103"
+    delius-prod     = "050243167760"
+  }
+
+  # Slack alarms
+  slack_nonprod_url     = "/services/T02DYEB3A/BS16X2JGY/r9e1CJYez7BDmwyliIl7WzLf"
+  slack_nonprod_channel = "delius-alerts-iaps-nonprod"
+  slack_prod_url        = "/services/T02DYEB3A/BRU7E5QSC/3Rt4FV9FtrDSll5aMPABgRoB"
+  slack_prod_channel    = "delius-alerts-iaps-production"
 }
