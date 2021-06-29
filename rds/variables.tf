@@ -10,17 +10,33 @@ variable "remote_state_bucket_name" {
 #  type    = list(string)
 #}
 
-# PARAMETER GROUP
+# PARAMETER GROUP for module use
 variable "parameters" {
   default = []
   type    = list(string)
 }
 
-# DB option group
+# PARAMETER GROUP for non module user
+variable "parameters_local" {
+  default = {}
+  type    = map(string)
+}
+
+# DB option group for module use
 variable "options" {
   type        = list(string)
   description = "A list of Options to apply."
   default     = []
+}
+
+# DB option group for non-module use
+variable "options_local" {
+  type = map(object({
+    options  = map(string)
+    settings = map(string)
+  }))
+  description = "A map of Options to apply"
+  default     = {}
 }
 
 # INSTANCE
@@ -155,4 +171,11 @@ variable "environment_type" {
 variable "multi_az" {
   type    = bool
   default = true
+}
+
+variable "tags" {
+  type = map(string)
+}
+
+variable "eng_role_arn" {
 }

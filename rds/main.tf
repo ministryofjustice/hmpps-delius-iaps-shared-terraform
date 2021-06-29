@@ -56,7 +56,7 @@ locals {
   db_identity            = data.terraform_remote_state.common.outputs.iaps_app_name
   environment            = data.terraform_remote_state.common.outputs.environment
   environment-name       = data.terraform_remote_state.common.outputs.environment_name
-  tags                   = data.terraform_remote_state.common.outputs.common_tags
+  tags                   = merge(var.tags,{"sub-project" = data.terraform_remote_state.common.outputs.iaps_app_name})
   public_cidr_block      = [data.terraform_remote_state.common.outputs.db_cidr_block]
   private_cidr_block     = [data.terraform_remote_state.common.outputs.private_cidr_block]
   db_cidr_block          = [data.terraform_remote_state.common.outputs.db_cidr_block]
@@ -67,6 +67,7 @@ locals {
     data.terraform_remote_state.security-groups.outputs.security_groups_sg_rds_id,
     data.terraform_remote_state.security-groups.outputs.security_groups_sg_delius_db,
   ]
+
 
   db_password          = data.aws_ssm_parameter.db_password.value
   family               = var.rds_family
@@ -141,12 +142,12 @@ resource "aws_db_parameter_group" "iaps_parameter_group" {
 
   dynamic "parameter" {
       
-      for_each = var.parameters
-    
-      content {
-          name  = parameter.key
-          value = parameter.value
-      }
+    for_each = var.parameters_local
+  
+    content {
+      name  = parameter.key
+      value = parameter.value
+    }
   }
 
   tags = local.tags
@@ -178,18 +179,25 @@ resource "aws_db_option_group" "iaps_option_group" {
   major_engine_version     = local.major_engine_version
  
   dynamic "option" {
-      for_each = var.options
 
-      content {
-        option_name = "${var.name_prefix}-${option.key}"
+    for_each = var.options_local
 
-        option_settings {
-          name  = option.key
-          value = option.value
+    content {
+      option_name = option.key
+      port = contains(keys(option.value.options), "port") ? option.value.options["port"] : null 
+      version = contains(keys(option.value.options), "version") ? option.value.options["version"] : null 
+      vpc_security_group_memberships = contains(keys(option.value.options), "vpc_security_group_memberships") ? local.security_group_ids : null 
+
+      dynamic "option_settings" {
+
+        for_each = option.value.settings
+        content {
+          name = option_settings.key
+          value = (contains(["AGENT_REGISTRATION_PASSWORD"],option_settings.key) ? data.aws_ssm_parameter.agent_registration_password.value : option_settings.value)
         }
       }
-  }
-      
+    }
+  }   
   tags = local.tags
 }
 
